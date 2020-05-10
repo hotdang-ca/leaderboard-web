@@ -3,8 +3,9 @@ import { TopLogo } from '../widgets/TopLogo';
 
 import './leaderboards.css';
 import { MenuBar } from '../widgets/MenuBar';
+import { LeaderBoardItem } from './LeaderBoardItem';
 
-type IScoreData = {
+export interface IScoreData {
     place: number;
     firstName: string;
     lastInitial: string;
@@ -12,21 +13,22 @@ type IScoreData = {
     teamName: string;
     gymName?: string;
     score: number;
-}
+    scoreId: number;
+};
 
 type IEventData = {
     name: string;
     scores: IScoreData[];
-}
+};
 
 type IDivision = {
     name: string;
     events: IEventData[];
-}
+};
 
 type ILeaderboardPayload = {
     divisions: IDivision[];
-}
+};
 
 const _leaderboardData: ILeaderboardPayload = {
     divisions: [
@@ -37,6 +39,7 @@ const _leaderboardData: ILeaderboardPayload = {
                     name: 'event a',
                     scores: [
                         {
+                            scoreId: 1,
                             place: 1,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -46,6 +49,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 261,
                         },
                         {
+                            scoreId: 2,
                             place: 2,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -55,6 +59,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 260,
                         },
                         {
+                            scoreId: 3,
                             place: 3,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -63,8 +68,8 @@ const _leaderboardData: ILeaderboardPayload = {
                             gymName: 'THE BOX - CROSSFIT TAUNTON',
                             score: 259,
                         },
-                        
                         {
+                            scoreId: 4,
                             place: 1,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -74,6 +79,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 261,
                         },
                         {
+                            scoreId: 5,
                             place: 2,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -83,6 +89,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 260,
                         },
                         {
+                            scoreId: 6,
                             place: 3,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -92,6 +99,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 259,
                         },
                         {
+                            scoreId: 7,
                             place: 4,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -101,6 +109,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 261,
                         },
                         {
+                            scoreId: 8,
                             place: 5,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -110,6 +119,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 260,
                         },
                         {
+                            scoreId: 9,
                             place: 6,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -118,8 +128,8 @@ const _leaderboardData: ILeaderboardPayload = {
                             gymName: 'THE BOX - CROSSFIT TAUNTON',
                             score: 259,
                         },
-                        
                         {
+                            scoreId: 10,
                             place: 4,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -129,6 +139,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 261,
                         },
                         {
+                            scoreId: 11,
                             place: 5,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -138,6 +149,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 260,
                         },
                         {
+                            scoreId: 12,
                             place: 6,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -152,6 +164,7 @@ const _leaderboardData: ILeaderboardPayload = {
                     name: 'event b',
                     scores: [
                         {
+                            scoreId: 13,
                             place: 1,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -161,6 +174,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 400,
                         },
                         {
+                            scoreId: 14,
                             place: 2,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -170,6 +184,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 392,
                         },
                         {
+                            scoreId: 15,
                             place: 3,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -179,6 +194,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 199,
                         },
                         {
+                            scoreId: 16,
                             place: 1,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -188,6 +204,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 500,
                         },
                         {
+                            scoreId: 17,
                             place: 2,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -197,6 +214,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 480,
                         },
                         {
+                            scoreId: 18,
                             place: 3,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -216,6 +234,7 @@ const _leaderboardData: ILeaderboardPayload = {
                     name: 'event c',
                     scores: [
                         {
+                            scoreId: 19,
                             place: 3,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -225,6 +244,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 100,
                         },
                         {
+                            scoreId: 20,
                             place: 2,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -234,6 +254,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 75,
                         },
                         {
+                            scoreId: 21,
                             place: 1,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -243,6 +264,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 50,
                         },
                         {
+                            scoreId: 22,
                             place: 1,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -252,6 +274,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 100,
                         },
                         {
+                            scoreId: 23,
                             place: 3,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -261,6 +284,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 75,
                         },
                         {
+                            scoreId: 24,
                             place: 2,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -275,6 +299,7 @@ const _leaderboardData: ILeaderboardPayload = {
                     name: 'event d',
                     scores: [
                         {
+                            scoreId: 25,
                             place: 1,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -284,6 +309,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 175,
                         },
                         {
+                            scoreId: 26,
                             place: 2,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -293,6 +319,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 150,
                         },
                         {
+                            scoreId: 27,
                             place: 3,
                             firstName: 'James',
                             lastInitial: 'P',
@@ -302,6 +329,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 100,
                         },
                         {
+                            scoreId: 28,
                             place: 1,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -311,6 +339,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 175,
                         },
                         {
+                            scoreId: 29,
                             place: 2,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -320,6 +349,7 @@ const _leaderboardData: ILeaderboardPayload = {
                             score: 150,
                         },
                         {
+                            scoreId: 30,
                             place: 3,
                             firstName: 'Dara',
                             lastInitial: 'P',
@@ -362,37 +392,13 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
         });
     }
 
-    private _renderLeaderboardItems = (leaderboardItems: IScoreData[] | undefined): JSX.Element => {
+    private _renderLeaderboardItems = (leaderboardItems: IScoreData[] | undefined): JSX.Element | JSX.Element[] => {
         if (typeof(leaderboardItems) === 'undefined') {
             return <em>No score data to show.</em>
         }
 
-        const leaderboardJsx = leaderboardItems.map((l) => {
-            return (
-                <article className="leaderboard-item">
-                    <div className="rank">
-                        { l.place }
-                    </div>
-                    <div className="team-gym-container">
-                        <div className="team"> {/* team */}
-                            { l.teamName }
-                        </div>
-                        <div className="gym"> {/* gym */}
-                            { l.gymName }
-                        </div>
-                    </div>
-                    <div className="score"> {/* gym */}
-                        { l.score }
-                    </div>
-                </article>
-            );
-        });
-
-        return (
-            <>
-                { leaderboardJsx }
-            </>
-        );
+        return leaderboardItems
+            .map((l) => <LeaderBoardItem key={l.scoreId} score={l} />)
     }
 
     private _renderDivisionSelection = (): JSX.Element => {
@@ -445,14 +451,44 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
         }
     }
 
+    public _renderLeaderboard = (selectedEvent?: IEventData) => {
+        if (!selectedEvent) {
+            return <em>No event data</em>
+        };
+
+        const men = selectedEvent?.scores
+            .filter((s) => s.gender === 'M')
+            .sort((a, b) => a.place - b.place);
+
+        const women = selectedEvent?.scores
+            .filter((s) => s.gender === 'F')
+            .sort((a, b) => a.place - b.place);;
+
+        return (
+            <div className="leaderboard">
+                <h3>Leaderboard</h3>
+                <div className="leaderboard-list">
+
+                    <div className="leaderboard-class">
+                        <h6>Men</h6>
+                        { this._renderLeaderboardItems(men) }
+                    </div>
+                    
+                    <div className="leaderboard-class">
+                        <h6>Women</h6>
+                        { this._renderLeaderboardItems(women) }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     public render(): JSX.Element {
         const { division, event } = this.state;
         
+        // TODO: this will come from the network
         const selectedDivision = _leaderboardData.divisions.find((d) => d.name === division);
         const selectedEvent = selectedDivision?.events.find((e) => e.name === event);
-
-        const men = selectedEvent?.scores.filter((s) => s.gender === 'M').sort((a, b) => a.place - b.place);
-        const women = selectedEvent?.scores.filter((s) => s.gender === 'F').sort((a, b) => a.place - b.place);;
 
         return (
             <div className="page-container">
@@ -461,22 +497,8 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
                 
                 { this._renderDivisionSelection() }
                 { this._renderEventSelection(division) }
-
-                <div className="leaderboard">
-                    <h3>Leaderboard</h3>
-                    <div className="leaderboard-list">
-
-                        <div className="leaderboard-class">
-                            <h6>Men</h6>
-                            { this._renderLeaderboardItems(men) }
-                        </div>
-                        
-                        <div className="leaderboard-class">
-                            <h6>Women</h6>
-                            { this._renderLeaderboardItems(women) }
-                        </div>
-                    </div>
-                </div>
+                { this._renderLeaderboard(selectedEvent) }
+                
             </div>
         );
 

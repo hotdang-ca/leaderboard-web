@@ -8,6 +8,7 @@ export class LoginComponent extends React.Component {
             <div className="page-container">
                 <TopLogo />
                 <MenuBar />
+                <h1>Login</h1>
             </div>
         );
     }
