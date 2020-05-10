@@ -4,6 +4,7 @@ import { TopLogo } from '../widgets/TopLogo';
 import './leaderboards.css';
 import { MenuBar } from '../widgets/MenuBar';
 import { LeaderBoardItem } from './LeaderBoardItem';
+import { LeaderboardsController } from '../../Utils/ApiController';
 
 export interface IScoreData {
     place: number;
@@ -30,340 +31,6 @@ type ILeaderboardPayload = {
     divisions: IDivision[];
 };
 
-const _leaderboardData: ILeaderboardPayload = {
-    divisions: [
-        {
-            name: 'division a',
-            events: [
-                {                  
-                    name: 'event a',
-                    scores: [
-                        {
-                            scoreId: 1,
-                            place: 1,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 261,
-                        },
-                        {
-                            scoreId: 2,
-                            place: 2,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 260,
-                        },
-                        {
-                            scoreId: 3,
-                            place: 3,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 259,
-                        },
-                        {
-                            scoreId: 4,
-                            place: 1,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 261,
-                        },
-                        {
-                            scoreId: 5,
-                            place: 2,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 260,
-                        },
-                        {
-                            scoreId: 6,
-                            place: 3,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 259,
-                        },
-                        {
-                            scoreId: 7,
-                            place: 4,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 261,
-                        },
-                        {
-                            scoreId: 8,
-                            place: 5,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 260,
-                        },
-                        {
-                            scoreId: 9,
-                            place: 6,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 259,
-                        },
-                        {
-                            scoreId: 10,
-                            place: 4,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 261,
-                        },
-                        {
-                            scoreId: 11,
-                            place: 5,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 260,
-                        },
-                        {
-                            scoreId: 12,
-                            place: 6,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 259,
-                        },
-                    ],
-                },
-                {                  
-                    name: 'event b',
-                    scores: [
-                        {
-                            scoreId: 13,
-                            place: 1,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 400,
-                        },
-                        {
-                            scoreId: 14,
-                            place: 2,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 392,
-                        },
-                        {
-                            scoreId: 15,
-                            place: 3,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 199,
-                        },
-                        {
-                            scoreId: 16,
-                            place: 1,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 500,
-                        },
-                        {
-                            scoreId: 17,
-                            place: 2,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 480,
-                        },
-                        {
-                            scoreId: 18,
-                            place: 3,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 450,
-                        }
-                    ],
-                }
-            ]
-        },
-        {
-            name: 'division b',
-            events: [
-                {                  
-                    name: 'event c',
-                    scores: [
-                        {
-                            scoreId: 19,
-                            place: 3,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 100,
-                        },
-                        {
-                            scoreId: 20,
-                            place: 2,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 75,
-                        },
-                        {
-                            scoreId: 21,
-                            place: 1,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 50,
-                        },
-                        {
-                            scoreId: 22,
-                            place: 1,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 100,
-                        },
-                        {
-                            scoreId: 23,
-                            place: 3,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 75,
-                        },
-                        {
-                            scoreId: 24,
-                            place: 2,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 100,
-                        }
-                    ],
-                },
-                {                  
-                    name: 'event d',
-                    scores: [
-                        {
-                            scoreId: 25,
-                            place: 1,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 175,
-                        },
-                        {
-                            scoreId: 26,
-                            place: 2,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 150,
-                        },
-                        {
-                            scoreId: 27,
-                            place: 3,
-                            firstName: 'James',
-                            lastInitial: 'P',
-                            gender: 'M',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 100,
-                        },
-                        {
-                            scoreId: 28,
-                            place: 1,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'Crossfit Truro',
-                            gymName: 'Crossfit Truro',
-                            score: 175,
-                        },
-                        {
-                            scoreId: 29,
-                            place: 2,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'CFA Misfits',
-                            gymName: 'CROSSFIT ASCOT',
-                            score: 150,
-                        },
-                        {
-                            scoreId: 30,
-                            place: 3,
-                            firstName: 'Dara',
-                            lastInitial: 'P',
-                            gender: 'F',
-                            teamName: 'THE BOX ROGUES',
-                            gymName: 'THE BOX - CROSSFIT TAUNTON',
-                            score: 100,
-                        }
-                    ],
-                }
-            ]
-        },
-    ],
-}
 
 interface ILeaderBoardsComponentState {
     division?: string;
@@ -382,13 +49,18 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
     }
 
     private _fetchData(): void {
-        const firstDivision = _leaderboardData?.divisions[0];
-        const firstEvent = firstDivision?.events[0];
+        LeaderboardsController.getAll().then((leaderboardPayload: ILeaderboardPayload) => {
+            const firstDivision = leaderboardPayload.divisions[0];
+            const firstEvent = firstDivision.events[0];
 
-        this.setState({
-            division: firstDivision.name,
-            event: firstEvent.name,
-            leaderboardPayload: _leaderboardData,
+            this.setState({
+                division: firstDivision.name,
+                event: firstEvent.name,
+                leaderboardPayload,
+            });
+        })
+        .catch((err) => {
+            console.log('There was an error', err);
         });
     }
 
@@ -433,9 +105,11 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
         if (!division?.length) {
             return;
         }
-        
+
         if (division?.length) {
-            const optionJsx = _leaderboardData.divisions
+            const { leaderboardPayload } = this.state;
+
+            const optionJsx = leaderboardPayload?.divisions
                 .find((d) => d.name === division)
                 ?.events.map((event) => {
                     return (
@@ -484,10 +158,10 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
     }
 
     public render(): JSX.Element {
-        const { division, event } = this.state;
+        const { division, event, leaderboardPayload } = this.state;
         
         // TODO: this will come from the network
-        const selectedDivision = _leaderboardData.divisions.find((d) => d.name === division);
+        const selectedDivision = leaderboardPayload?.divisions.find((d) => d.name === division);
         const selectedEvent = selectedDivision?.events.find((e) => e.name === event);
 
         return (
