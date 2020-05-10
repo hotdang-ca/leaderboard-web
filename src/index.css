@@ -9,5 +9,40 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  monospace;
+}
+
+.page-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 66px;
+  margin: 16px;
+  background-color: black;
+}
+
+.menu-bar a {
+  color: white;
+  text-transform: uppercase;
+  margin: 0 32px;
+}
+
+@media screen and (max-width: 414px) {
+  .menu-bar {
+    flex-direction: column;
+    height: initial;
+  }
+
+  .menu-bar a {
+    margin: 8px auto;
+  }
 }
