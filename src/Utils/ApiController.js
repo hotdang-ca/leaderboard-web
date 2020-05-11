@@ -46,6 +46,37 @@ export const UsersController = {
                 throw new Error(err);
             });
     },
+    getProfile: (userId) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Users}/${userId}`;
+        const options = {
+            method: 'get',
+            headers: getHeaders(),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                if (parsedApiResult.user) {
+                    return parsedApiResult.user;
+                }
+            }).catch((err) => {
+                console.log('in catch');
+            });
+    },
+    updateProfile: (userId, newProfile) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Users}/${userId}`;
+        const options = {
+            method: 'put',
+            headers: getHeaders(),
+            body: JSON.stringify({user: newProfile }),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                return parsedApiResult;
+            }).catch((err) => {
+                console.log('in catch');
+            });
+    }
 };
 
 export const LeaderboardsController = {

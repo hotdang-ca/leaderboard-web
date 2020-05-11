@@ -4,6 +4,7 @@ import { HomeComponent } from './Components/Home/HomeComponent';
 import { LeaderBoardsComponent } from './Components/LeaderBoards/LeaderBoardsComponent';
 import { RegisterComponent } from './Components/Register/RegisterComponent';
 import { LoginComponent } from './Components/Login/LoginComponent';
+import { ProfileComponent } from './Components/Profile/ProfileComponent';
 
 export class MainRouter extends React.Component {
     public render() {
@@ -20,6 +21,10 @@ export class MainRouter extends React.Component {
 
                     <Route path="/login">
                         <LoginComponent />
+                    </Route>
+
+                    <Route path="/profile">
+                        <ProfileComponent />
                     </Route>
 
                     <Route path="/">

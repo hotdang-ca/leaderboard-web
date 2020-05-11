@@ -13,7 +13,7 @@ export const MenuBar = (): JSX.Element => {
     <div className="menu-bar">
         <Link to="/">Home</Link>
         <Link to="/leaderboards">Leaderboards</Link>
-        { userId ? null  : <Link to="/register">Register</Link> }
+        { userId ? <Link to="/profile">Profile</Link>  : <Link to="/register">Register</Link> }
         { userId ? <a href="" onClick={logout}>Logout</a>: <Link to="/login">Login</Link> }
     </div>    
     )
