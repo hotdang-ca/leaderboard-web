@@ -3,6 +3,8 @@ import { TopLogo } from '../widgets/TopLogo';
 import { MenuBar } from '../widgets/MenuBar';
 import { UsersController } from '../../Utils/ApiController';
 
+import './profile.css';
+
 interface IProfileComponentState {
     firstName: string;
     lastName: string;
@@ -11,6 +13,7 @@ interface IProfileComponentState {
     gymName: string;
     email: string;
 
+    statusMessage?: string;
     isLoading: boolean;
 }
 
@@ -49,6 +52,10 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
     private _handleUpdateProfileClicked = (e: any) => {
         e.preventDefault();
 
+        this.setState({
+            statusMessage: undefined,
+        });
+        
         const { firstName, lastName, gender, teamName, gymName } = this.state;
         const userId = localStorage.getItem('userId');
 
@@ -59,7 +66,9 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             teamName,
             gymName,
         }).then((result) => {
-            console.log('result', result);
+            this.setState({
+                statusMessage: 'Updated your profile successfully!',
+            });
         });
     }
 
@@ -69,6 +78,12 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                 <TopLogo />
                 <MenuBar />
                 <h1>Profile</h1>
+
+                { this.state.statusMessage &&
+                    <div className="status-message">
+                        { this.state.statusMessage }
+                    </div>
+                }
 
                 <div>
                     <label htmlFor="firstName">First Name: </label>

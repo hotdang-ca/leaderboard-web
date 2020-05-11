@@ -5,6 +5,8 @@ import { MenuBar } from '../widgets/MenuBar';
 import { UsersController } from '../../Utils/ApiController';
 import { withRouter } from 'react-router-dom';
 
+import './register.css';
+
 interface IRegisterComponentState {
     firstName?: string;
     lastName?: string;
@@ -13,6 +15,7 @@ interface IRegisterComponentState {
     teamName?: string;
     gymName?: string;
 
+    errorMessage?: string;
 }
 class RegisterComponentClass extends React.Component<any, IRegisterComponentState> {
     constructor(props: any, state: IRegisterComponentState) {
@@ -24,6 +27,10 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
     private _handleRegisterSubmit = (e: any) => {
         e.preventDefault();
 
+        this.setState({
+            errorMessage: undefined,
+        });
+        
         const { firstName, lastName, password, email, teamName, gymName } = this.state;
         if (
             (!firstName || firstName.length < 2)
@@ -34,7 +41,9 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
             || 
             (!email || email.length < 6)
         ) {
-            alert('You need to fill out a firstname, lastname, password and email at minimum.');
+            this.setState({
+                errorMessage: 'You need to fill out a firstname, lastname, password and email at minimum.'
+            })
             return;
         }
 
@@ -54,8 +63,15 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
                 const { history } = this.props;
                 history.push('/leaderboards');
             }
+
+            this.setState({
+                errorMessage: result.error,
+            })
+
         }).catch((error: string) => {
-            alert("ERROR: " + error);
+            this.setState({
+                errorMessage: error,
+            });
         });
     }
 
@@ -66,6 +82,13 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
                 <MenuBar />
 
                 <h1>Register</h1>
+
+                { this.state.errorMessage && 
+                    <div className="error">
+                        { this.state.errorMessage }
+                    </div>
+                }
+
                 <form>
                     <input type="text" placeholder="First Name" onChange={(e) => this.setState({ firstName: e.target.value })} />
                     <br/><input type="text" placeholder="Last Name" onChange={(e) => this.setState({ lastName: e.target.value })} />
