@@ -2,6 +2,7 @@ const API_ROOT = '/api'; // this will be routed via proxy to the API
 
 const ENDPOINTS = {
     Leaderboards: 'leaderboards',
+    Users: 'users',
 };
 
 const getHeaders = () => {
@@ -9,6 +10,25 @@ const getHeaders = () => {
         'user-agent': 'leaderboards-web',
         'content-type': 'application/json',
     }
+};
+
+export const UsersController = {
+    register: (userObject) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Users}/register`
+
+        const options = {
+            method: 'post',
+            headers: getHeaders(),
+            body: JSON.stringify(userObject),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                return parsedApiResult;
+            }).catch((err) => {
+                throw new Error(err);
+            });
+    },
 };
 
 export const LeaderboardsController = {
