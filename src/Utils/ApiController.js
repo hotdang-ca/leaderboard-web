@@ -14,7 +14,7 @@ const getHeaders = () => {
 
 export const UsersController = {
     register: (userObject) => {
-        const URL = `${API_ROOT}/${ENDPOINTS.Users}/register`
+        const URL = `${API_ROOT}/${ENDPOINTS.Users}/register`;
 
         const options = {
             method: 'post',
@@ -26,6 +26,23 @@ export const UsersController = {
             .then((parsedApiResult) => {
                 return parsedApiResult;
             }).catch((err) => {
+                throw new Error(err);
+            });
+    },
+    login: (email, password) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Users}/login`;
+        const options = {
+            method: 'post',
+            headers: getHeaders(),
+            body: JSON.stringify({ email, password }),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                console.log('in then');
+                return parsedApiResult;
+            }).catch((err) => {
+                console.log('in catch');
                 throw new Error(err);
             });
     },
