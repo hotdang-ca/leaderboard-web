@@ -7,6 +7,7 @@ import './profile.css';
 import { IndeterminateLoader } from '../widgets/IndeterminateLoader';
 import { LeaderBoardItem } from '../LeaderBoards/LeaderBoardItem';
 import { IScoreData } from '../LeaderBoards/LeaderBoardsComponent';
+import { ScrollToSlowly } from '../../Utils/Utils';
 
 interface IProfileComponentState {
     firstName: string;
@@ -140,7 +141,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             this.setState({
                 statusMessage: 'Updated your profile successfully!',
             }, () => {
-                window.scrollTo(0, 0);
+                ScrollToSlowly(0);
             });
         });
     }
@@ -160,7 +161,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             selectedEvent
         ).then((response) => {
             if (response.error) {
-                window.scrollTo(0, 0);
+                ScrollToSlowly(0);
                 this.setState({
                     errorMessage: response.error,
                 });
@@ -172,7 +173,8 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                 isSubmittingScore: false,
                 statusMessage: 'Submitted Score!',
             }, () => {
-                window.scrollTo(0, 0);
+                ScrollToSlowly(0);
+
                 setTimeout(() => {
                     this._fetchData();
                 }, 500);
