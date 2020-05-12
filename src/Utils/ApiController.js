@@ -3,6 +3,8 @@ const API_ROOT = '/api'; // this will be routed via proxy to the API
 const ENDPOINTS = {
     Leaderboards: 'leaderboards',
     Users: 'users',
+    Divisions: 'divisions',
+    Scores: 'scores',
 };
 
 const getHeaders = () => {
@@ -77,6 +79,75 @@ export const UsersController = {
                 console.log('in catch');
             });
     }
+};
+
+export const DivisionsController = {
+    getDivisions: () => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Divisions}`;
+        const options = {
+            method: 'get',
+            headers: getHeaders(),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                if (parsedApiResult.error) {
+                    throw new Error(parsedApiResult.error);
+                }
+
+                if (parsedApiResult && parsedApiResult.divisions) {
+                    return parsedApiResult.divisions;
+                }
+            }).catch((err) => {
+                console.log('error', err);
+                throw new Error(err);
+            });
+    },
+
+    getEventsForDivision: (divisionId) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Divisions}/${divisionId}/events`;
+        const options = {
+            method: 'get',
+            headers: getHeaders(),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                if (parsedApiResult.error) {
+                    throw new Error(parsedApiResult.error);
+                }
+
+                if (parsedApiResult && parsedApiResult.events) {
+                    return parsedApiResult.events;
+                }
+            }).catch((err) => {
+                console.log('error', err);
+                throw new Error(err);
+            });
+    }
+}
+
+export const ScoresController = {
+    submitScore: (score, userId, eventId) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Scores}`;
+
+        const options = {
+            method: 'post',
+            headers: getHeaders(),
+            body: JSON.stringify({
+                score,
+                event: eventId,
+                user: userId,
+            }),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                return parsedApiResult;
+            }).catch((err) => {
+                throw new Error(err);
+            });
+    },
 };
 
 export const LeaderboardsController = {

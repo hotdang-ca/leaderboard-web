@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TopLogo } from '../widgets/TopLogo';
 import { MenuBar } from '../widgets/MenuBar';
-import { UsersController } from '../../Utils/ApiController';
+import { UsersController, DivisionsController, ScoresController } from '../../Utils/ApiController';
 
 import './profile.css';
 
@@ -13,8 +13,16 @@ interface IProfileComponentState {
     gymName: string;
     email: string;
 
+    selectedDivision?: string;
+    selectedEvent?: string;
+    score?: number;
+
+    divisions: any[];
+    events: any[];
+
     statusMessage?: string;
     isLoading: boolean;
+    isSubmittingScore: boolean;
 }
 
 export class ProfileComponent extends React.Component<any, IProfileComponentState> {
@@ -28,8 +36,16 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             gymName: '',
             email: '',
             isLoading: false,
+
+            selectedDivision: undefined,
+            selectedEvent: undefined,
+            divisions: [],
+            events: [],
+
+            isSubmittingScore: false,
         }
     }
+
     public componentDidMount() {
         const userId = localStorage.getItem('userId');
         if (!userId) {
@@ -46,6 +62,30 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                 teamName: user.teamName,
                 gymName: user.gymName,
             });
+        });
+
+        DivisionsController.getDivisions().then((divisions: any) => {
+            this.setState({
+                divisions
+            });
+        });
+    }
+
+    private _handleSelectedDivisionChanged = (e: any) => {
+        // TODO: fetch events for this division
+        const { target: { value } } = e;
+        DivisionsController.getEventsForDivision(value).then((events) => {
+            this.setState({
+                selectedDivision: value,
+                events,
+            });
+        });
+    }
+
+    private _handleSelectedEventChanged = (e: any) => {
+        const { target: { value } } = e;
+        this.setState({
+            selectedEvent: value,
         });
     }
 
@@ -68,6 +108,25 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
         }).then((result) => {
             this.setState({
                 statusMessage: 'Updated your profile successfully!',
+            });
+        }, () => {
+            window.scrollTo(0, 0);
+        });
+    }
+
+    private _submitScore = () => {
+        const { selectedEvent, score } = this.state;
+        const userId = localStorage.getItem('userId');
+        ScoresController.submitScore(
+            score, 
+            userId,
+            selectedEvent
+        ).then((result) => {
+            this.setState({
+                isSubmittingScore: false,
+                statusMessage: 'Submitted Score!',
+            }, () => {
+                window.scrollTo(0, 0);
             });
         });
     }
@@ -103,7 +162,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                     placeholder="Email" value={this.state.email || ''} 
                 />
                 <br/>
-                <label htmlFor="gender">Division: </label>
+                <label htmlFor="gender">Class: </label>
                 <select
                     onChange={(e: any) => this.setState({ gender: e.target.value })}
                     id="gender"
@@ -140,6 +199,66 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
         return (
             <div>
                 <h2>Submit Score</h2>
+                <label htmlFor="division">Division:</label>
+                <select
+                    value={this.state.selectedDivision || ''}
+                    id="division"
+                    onChange={this._handleSelectedDivisionChanged}
+                >
+                    <option value="">-- select division --</option>
+                    { 
+                        this.state.divisions.length && 
+                        this.state.divisions.map((division) => {
+                            return (
+                                <option key={division.id} value={division.id}>
+                                    { division.name }
+                                </option>
+                            )
+                        })
+                    }
+                </select>
+                <br/>
+                <label htmlFor="event">Event:</label>
+                {
+                    !this.state.selectedDivision
+                    ? <em>First, select a division...</em>
+                    :
+                        <select
+                            id="event"
+                            value={this.state.selectedEvent || ''}
+                            onChange={this._handleSelectedEventChanged}
+                        >
+                            <option value="">-- select division --</option>
+                            {
+                                this.state.events.length &&
+                                this.state.events.map((e) => {
+                                    return (
+                                        <option key={e.id} value={e.id}>
+                                            { e.name }
+                                        </option>
+                                    )
+                                })
+                            }
+                        </select>
+                }
+                <br/>
+                
+                <label htmlFor="score">Your Score:</label>
+                {
+                    (!this.state.selectedDivision || !this.state.selectedEvent)
+                    ? <em>First, select a event...</em>
+                    : <input
+                        type="number"
+                        placeholder="Score"
+                        onChange={(e) => {this.setState({ score: parseFloat(e.target.value) })}} />
+                }
+
+                <button 
+                    disabled={ this.state.isSubmittingScore || !(this.state.selectedDivision && this.state.selectedEvent)}
+                    onClick={this._submitScore}
+                >
+                    { this.state.isSubmittingScore ? 'Submitting score...' : 'Submit Score' }
+                </button>
             </div>
         );
     }

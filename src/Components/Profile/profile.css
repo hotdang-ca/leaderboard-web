@@ -28,8 +28,8 @@ label {
     font-size: 0.8rem;
 }
 
-input[type=text], input[type=email] {
-    padding: 8px;
+input[type=text], input[type=email], input[type=number] {
+    padding: 12px;
     box-sizing: border-box;
     margin: 8px;
     border-radius: 4px;
@@ -49,6 +49,10 @@ input[type=button], button {
     margin: 4px 2px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+input[type=button]:disabled, button:disabled {
+    background-color: rgba(255, 0, 0, 0.4);
 }
 
 select {
