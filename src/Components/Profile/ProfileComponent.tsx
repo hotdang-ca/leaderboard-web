@@ -26,6 +26,7 @@ interface IProfileComponentState {
     scores: any[];
 
     statusMessage?: string;
+    errorMessage?: string;
     isLoading: boolean;
     isSubmittingScore: boolean;
 }
@@ -96,7 +97,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                     allEvents,
                     isLoading: false,
                 });
-            }, 1500);
+            }, 500);
         });
     }
 
@@ -123,6 +124,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
 
         this.setState({
             statusMessage: undefined,
+            errorMessage: undefined,
         });
         
         const { firstName, lastName, gender, teamName, gymName } = this.state;
@@ -145,12 +147,27 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
 
     private _submitScore = () => {
         const { selectedEvent, score } = this.state;
+
+        this.setState({ 
+            statusMessage: undefined,
+            errorMessage: undefined,
+        });
+
         const userId = localStorage.getItem('userId');
         ScoresController.submitScore(
             score, 
             userId,
             selectedEvent
-        ).then((_) => {
+        ).then((response) => {
+            if (response.error) {
+                window.scrollTo(0, 0);
+                this.setState({
+                    errorMessage: response.error,
+                });
+
+                return;
+            }
+
             this.setState({
                 isSubmittingScore: false,
                 statusMessage: 'Submitted Score!',
@@ -343,6 +360,13 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                 { this.state.statusMessage &&
                     <div className="status-message">
                         { this.state.statusMessage }
+                    </div>
+                }
+
+                {
+                    this.state.errorMessage &&
+                    <div className="error">
+                        { this.state.errorMessage }
                     </div>
                 }
 

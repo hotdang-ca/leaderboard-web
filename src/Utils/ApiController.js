@@ -144,7 +144,11 @@ export const ScoresController = {
 
         return fetch(URL, options).then((apiResult) => apiResult.json())
             .then((parsedApiResult) => {
-                return parsedApiResult;
+                if (!parsedApiResult.score && parsedApiResult.error) {
+                    return { error: parsedApiResult.error };
+                }
+
+                return parsedApiResult.score;
             }).catch((err) => {
                 throw new Error(err);
             });
