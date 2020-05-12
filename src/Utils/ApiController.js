@@ -5,6 +5,7 @@ const ENDPOINTS = {
     Users: 'users',
     Divisions: 'divisions',
     Scores: 'scores',
+    Events: 'events',
 };
 
 const getHeaders = () => {
@@ -148,8 +149,39 @@ export const ScoresController = {
                 throw new Error(err);
             });
     },
+    getMyScores: (userId) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Users}/${userId}/scores`;
+
+        const options = {
+            method: 'get',
+            headers: getHeaders(),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                return parsedApiResult.scores || [];
+            }).catch((err) => {
+                throw new Error(err);
+            });
+    }
 };
 
+export const EventsController = {
+    getAllEvents: () => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Events}`;
+        const options = {
+            method: 'get',
+            headers: getHeaders(),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                return parsedApiResult.events || [];
+            }).catch((err) => {
+                throw new Error(err);
+            });
+    }
+}
 export const LeaderboardsController = {
     getAll: () => {
         const URL = `${API_ROOT}/${ENDPOINTS.Leaderboards}/all`;

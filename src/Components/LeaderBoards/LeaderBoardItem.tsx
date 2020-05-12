@@ -9,6 +9,12 @@ type ILeaderBoardItemProps = {
 export const LeaderBoardItem: React.FC<ILeaderBoardItemProps> = 
 ({ score }) => (
     <article className="leaderboard-item">
+        { 
+            score.divisionName && 
+            <div className="division-and-event">
+                { score.divisionName }<br/>{score.eventName }
+            </div>
+        }
         <div className="rank">
             { score.place }
         </div>
@@ -21,7 +27,7 @@ export const LeaderBoardItem: React.FC<ILeaderBoardItemProps> =
             </div>
         </div>
         <div className="score"> {/* gym */}
-            { score.score }
+            { score.score || '---'}
         </div>
     </article>
 );

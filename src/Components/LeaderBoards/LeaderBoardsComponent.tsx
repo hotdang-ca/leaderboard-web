@@ -15,6 +15,8 @@ export interface IScoreData {
     gymName?: string;
     score: number;
     scoreId: number;
+    eventName?: string;
+    divisionName?: string;
 };
 
 type IEventData = {

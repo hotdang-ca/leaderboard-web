@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { TopLogo } from '../widgets/TopLogo';
 import { MenuBar } from '../widgets/MenuBar';
-import { UsersController, DivisionsController, ScoresController } from '../../Utils/ApiController';
+import { UsersController, DivisionsController, ScoresController, EventsController } from '../../Utils/ApiController';
 
 import './profile.css';
+import { IndeterminateLoader } from '../widgets/IndeterminateLoader';
+import { LeaderBoardItem } from '../LeaderBoards/LeaderBoardItem';
+import { IScoreData } from '../LeaderBoards/LeaderBoardsComponent';
 
 interface IProfileComponentState {
     firstName: string;
@@ -17,8 +20,10 @@ interface IProfileComponentState {
     selectedEvent?: string;
     score?: number;
 
+    allEvents: any[];
     divisions: any[];
     events: any[];
+    scores: any[];
 
     statusMessage?: string;
     isLoading: boolean;
@@ -41,6 +46,8 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             selectedEvent: undefined,
             divisions: [],
             events: [],
+            scores: [],
+            allEvents: [],
 
             isSubmittingScore: false,
         }
@@ -52,22 +59,44 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             window.location.href="/";
             return;
         }
+        this._fetchData();
+    }
 
-        UsersController.getProfile(userId).then((user) => {
-            this.setState({
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                gender: user.gender,
-                teamName: user.teamName,
-                gymName: user.gymName,
-            });
+    private _fetchData = async () => {
+        const userId = localStorage.getItem('userId');
+        this.setState({
+            isLoading: true,
         });
 
-        DivisionsController.getDivisions().then((divisions: any) => {
-            this.setState({
-                divisions
-            });
+        Promise.all([
+            UsersController.getProfile(userId),
+            DivisionsController.getDivisions(),
+            ScoresController.getMyScores(userId),
+            EventsController.getAllEvents(),
+        ]).then(([ user, divisions, scores, allEvents ]) => {
+            const {
+                firstName,
+                lastName,
+                email,
+                gender,
+                teamName,
+                gymName,
+            } = user;
+
+            setTimeout(() => {
+                this.setState({
+                    firstName,
+                    lastName,
+                    email,
+                    gender,
+                    teamName,
+                    gymName,
+                    divisions,
+                    scores,
+                    allEvents,
+                    isLoading: false,
+                });
+            }, 1500);
         });
     }
 
@@ -105,12 +134,12 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             gender,
             teamName,
             gymName,
-        }).then((result) => {
+        }).then((_) => {
             this.setState({
                 statusMessage: 'Updated your profile successfully!',
+            }, () => {
+                window.scrollTo(0, 0);
             });
-        }, () => {
-            window.scrollTo(0, 0);
         });
     }
 
@@ -121,13 +150,17 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             score, 
             userId,
             selectedEvent
-        ).then((result) => {
+        ).then((_) => {
             this.setState({
                 isSubmittingScore: false,
                 statusMessage: 'Submitted Score!',
             }, () => {
                 window.scrollTo(0, 0);
+                setTimeout(() => {
+                    this._fetchData();
+                }, 500);
             });
+
         });
     }
 
@@ -263,6 +296,43 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
         );
     }
 
+    private _renderMyScores = (): JSX.Element => {
+        const { scores } = this.state;
+        if (scores.length === 0) {
+            return <em>No scores posted yet.</em>;
+        }
+
+        const scoresJsx = scores.map((score: any) => {
+            const event = this.state.allEvents.find((e) => e.id === score.event);
+            const division = this.state.divisions.find((d) => d.id === event.division);
+
+            const scoreItem: IScoreData = {
+                ...score,
+                place: 0, // TODO: change to actual place
+                divisionName: division.name || 'no division',
+                eventName: event.name || 'no event',
+                firstName: this.state.firstName,
+                lastInitial: this.state.lastName,
+                teamName: this.state.teamName,
+                gymName: this.state.gymName,
+            };
+
+            return (
+                <LeaderBoardItem 
+                    key={score.id}
+                    score={scoreItem}
+                />
+            )
+        });
+
+        return (
+            <div>
+                <h2>My Scores</h2>
+                { scoresJsx }
+            </div>                
+        )
+    }
+    
     public render(): JSX.Element {
         return (
             <div className="page-container">
@@ -275,11 +345,24 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                         { this.state.statusMessage }
                     </div>
                 }
-                <div className="two-column-divs">
-                    { this._renderProfileForm() }
-                    { this._renderScoreSubmissionForm() }
-                </div>
-                
+
+                {
+                    this.state.isLoading
+                    ? 
+                        <>
+                            <em>Loading data...</em>
+                            <IndeterminateLoader />
+                        </>
+                    : 
+                        <div className="two-column-divs">
+                            { this._renderProfileForm() }
+                            <div>
+                                { this._renderMyScores() }
+                                { this._renderScoreSubmissionForm() }
+                            </div>
+                            
+                        </div>
+                    } 
             </div>
         )
     }

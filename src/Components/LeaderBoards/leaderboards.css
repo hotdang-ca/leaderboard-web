@@ -64,6 +64,12 @@
     text-align: right;
 }
 
+.leaderboard-item .division-and-event {
+    text-align: left;
+    font-size: 0.5rem;
+    padding-right: 8px;
+}
+
 @media screen and (max-width: 767px) {
     .leaderboard-item .team {
         font-size: 1.0rem;
