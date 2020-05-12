@@ -72,6 +72,78 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
         });
     }
 
+    private _renderProfileForm = () => {
+        return (
+            <div>
+                <h2>Update Profile</h2>
+                <label htmlFor="firstName">First Name: </label>
+                <input
+                    onChange={(e: any) => this.setState({ firstName: e.target.value })}
+                    id="firstName"
+                    type="text"
+                    placeholder="First Name"
+                    value={this.state.firstName || ''}
+                />
+                <br/>
+                <label htmlFor="lastName">Last Name: </label>
+                <input
+                    onChange={(e: any) => this.setState({ lastName: e.target.value })}
+                    id="lastName"
+                    type="text"
+                    placeholder="Last Name"
+                    value={this.state.lastName || ''}
+                />
+                <br/>
+                <label htmlFor="email">Email: </label>
+                <input
+                    onChange={(e: any) => this.setState({ email: e.target.value })}
+                    id="email"
+                    disabled={true}
+                    type="email" 
+                    placeholder="Email" value={this.state.email || ''} 
+                />
+                <br/>
+                <label htmlFor="gender">Division: </label>
+                <select
+                    onChange={(e: any) => this.setState({ gender: e.target.value })}
+                    id="gender"
+                    value={this.state.gender || ''}
+                >
+                    <option value="M">Men's</option>
+                    <option value="W">Women's</option>
+                </select>
+                <br/>
+                <label htmlFor="teamName">Your Team Name: </label>
+                <input
+                    onChange={(e: any) => this.setState({ teamName: e.target.value })}
+                    id="teamName"
+                    type="text"
+                    placeholder="Team Name"
+                    value={this.state.teamName || ''}
+                />
+                <br/>
+                <label htmlFor="gymName">Your Gym Name (optional): </label>
+                <input
+                    onChange={(e: any) => this.setState({ gymName: e.target.value })}
+                    id="gymName"
+                    type="text"
+                    placeholder="Gym Name"
+                    value={this.state.gymName || ''}
+                />
+                <br/>
+                <button onClick={this._handleUpdateProfileClicked}>Update</button>
+            </div>
+        );
+    }
+
+    private _renderScoreSubmissionForm = () => {
+        return (
+            <div>
+                <h2>Submit Score</h2>
+            </div>
+        );
+    }
+
     public render(): JSX.Element {
         return (
             <div className="page-container">
@@ -84,64 +156,11 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                         { this.state.statusMessage }
                     </div>
                 }
-
-                <div>
-                    <label htmlFor="firstName">First Name: </label>
-                    <input
-                        onChange={(e: any) => this.setState({ firstName: e.target.value })}
-                        id="firstName"
-                        type="text"
-                        placeholder="First Name"
-                        value={this.state.firstName || ''}
-                    />
-                    <br/>
-                    <label htmlFor="lastName">Last Name: </label>
-                    <input
-                        onChange={(e: any) => this.setState({ lastName: e.target.value })}
-                        id="lastName"
-                        type="text"
-                        placeholder="Last Name"
-                        value={this.state.lastName || ''}
-                    />
-                    <br/>
-                    <label htmlFor="email">Email: </label>
-                    <input
-                        onChange={(e: any) => this.setState({ email: e.target.value })}
-                        id="email"
-                        disabled={true}
-                        type="email" 
-                        placeholder="Email" value={this.state.email || ''} 
-                    />
-                    <br/>
-                    <label htmlFor="gender">Gender: </label>
-                    <input
-                        onChange={(e: any) => this.setState({ gender: e.target.value })}
-                        id="gender"
-                        type="text"
-                        placeholder="Gender" 
-                        value={this.state.gender || ''}
-                    />
-                    <br/>
-                    <label htmlFor="teamName">Your Team Name: </label>
-                    <input
-                        onChange={(e: any) => this.setState({ teamName: e.target.value })}
-                        id="teamName"
-                        type="text"
-                        placeholder="Team Name"
-                        value={this.state.teamName || ''}
-                    />
-                    <br/>
-                    <label htmlFor="gymName">Your Gym Name (optional): </label>
-                    <input
-                        onChange={(e: any) => this.setState({ gymName: e.target.value })}
-                        id="gymName"
-                        type="text"
-                        placeholder="Gym Name"
-                        value={this.state.gymName || ''}
-                    />
-                    <br/>
-                    <button onClick={this._handleUpdateProfileClicked}>Update</button>
+                <div className="two-column-divs">
+                    { this._renderProfileForm() }
+                    { this._renderScoreSubmissionForm() }
                 </div>
+                
             </div>
         )
     }
