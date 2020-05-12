@@ -327,7 +327,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
 
             const scoreItem: IScoreData = {
                 ...score,
-                place: 0, // TODO: change to actual place
+                place: score.place || '-',
                 divisionName: division.name || 'no division',
                 eventName: event.name || 'no event',
                 firstName: this.state.firstName,
