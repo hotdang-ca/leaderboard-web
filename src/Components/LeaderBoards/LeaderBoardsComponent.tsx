@@ -67,7 +67,7 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
     }
 
     private _renderLeaderboardItems = (leaderboardItems: IScoreData[] | undefined): JSX.Element | JSX.Element[] => {
-        if (typeof(leaderboardItems) === 'undefined') {
+        if (typeof(leaderboardItems) === 'undefined' || leaderboardItems.length === 0) {
             return <em>No score data to show.</em>
         }
 

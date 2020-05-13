@@ -200,8 +200,8 @@ export const LeaderboardsController = {
                     throw new Error(parsedApiResult.error);
                 }
 
-                if (parsedApiResult && parsedApiResult.divisions) {
-                    return parsedApiResult;
+                if (parsedApiResult && parsedApiResult.leaderboardData) {
+                    return parsedApiResult.leaderboardData;
                 }
             }).catch((err) => {
                 console.log('error', err);
