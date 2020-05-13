@@ -8,6 +8,7 @@ import { LeaderboardsController } from '../../Utils/ApiController';
 
 export interface IScoreData {
     place: number;
+    userId: string;
     firstName: string;
     lastInitial: string;
     gender: 'M' | 'F' | 'W';
@@ -38,6 +39,7 @@ interface ILeaderBoardsComponentState {
     division?: string;
     event?: string;
     leaderboardPayload?: ILeaderboardPayload;
+    cumulativePayload?: ILeaderboardPayload;
 }
 
 export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsComponentState> {
@@ -70,6 +72,10 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
         if (typeof(leaderboardItems) === 'undefined' || leaderboardItems.length === 0) {
             return <em>No score data to show.</em>
         }
+        
+        leaderboardItems
+            .sort((a, b) => a.score - b.score)
+            .forEach((i, idx) => i.place = (idx + 1));
 
         return leaderboardItems
             .map((l) => <LeaderBoardItem key={l.scoreId} score={l} />)
@@ -116,7 +122,7 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
                 ?.events.map((event) => {
                     return (
                         <button
-                            onClick={(e: any) => this.setState({ event: event.name })}
+                            onClick={() => this.setState({ event: event.name })}
                             className='event-button'
                             key={event.name}
                         >
@@ -128,9 +134,23 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
             return (
                 <div className="event-button-container">
                     { optionJsx }
+                    <button
+                        onClick={this._handleAllEventsClicked}
+                        className="event-button event-button-all">
+                            <strong>ALL (Cumulative)</strong>
+                        </button>
                 </div>
             );
         }
+    }
+
+    public _handleAllEventsClicked = () => {
+        LeaderboardsController.getAll().then((leaderboardPayload: ILeaderboardPayload) => {
+            this.setState({
+                cumulativePayload: leaderboardPayload,
+                event: 'all',
+            });
+        });
     }
 
     public _renderLeaderboard = (selectedEvent?: IEventData) => {
@@ -144,7 +164,7 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
 
         const women = selectedEvent?.scores
             .filter((s) => s.gender === 'W' || s.gender === 'F')
-            .sort((a, b) => a.place - b.place);;
+            .sort((a, b) => a.place - b.place);
 
         return (
             <div className="leaderboard">
@@ -165,12 +185,54 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
         );
     }
 
+    private _calculateCumulative = (selectedDivision?: IDivision): IEventData => {
+        const name = 'all';
+        const scores = new Array() as IScoreData[];
+
+        const defaultValue = {
+            name, scores,
+        };
+
+        if (!selectedDivision) {
+            return defaultValue;  
+        } 
+
+        const scoreData: Map<string,IScoreData> = new Map();
+
+        selectedDivision.events.forEach((event) => {
+             event.scores.forEach((score) => {
+                const scoreUser = score.userId;
+                const scoreScore = score.score;
+
+                if (!scoreData.get(scoreUser)) {
+                    scoreData.set(scoreUser, score);
+                } else {
+                    const existingScore = scoreData.get(scoreUser);
+                    if (existingScore) {
+                        scoreData.set(scoreUser, {...existingScore, score: existingScore.score += scoreScore});
+                    }
+                }
+            });
+        });
+
+        scoreData.forEach((v, _) => {
+           defaultValue.scores.push(v); 
+        });
+
+        return defaultValue;
+    }
+
     public render(): JSX.Element {
-        const { division, event, leaderboardPayload } = this.state;
+        let { division, event, leaderboardPayload, cumulativePayload } = this.state;
         
         // TODO: this will come from the network
-        const selectedDivision = leaderboardPayload?.divisions.find((d) => d.name === division);
-        const selectedEvent = selectedDivision?.events.find((e) => e.name === event);
+        const selectedDivision = event === 'all' 
+        ? cumulativePayload?.divisions.find((d) => d.name === division)
+        : leaderboardPayload?.divisions.find((d) => d.name === division);
+
+        const selectedEvent = event === 'all'
+            ? this._calculateCumulative(selectedDivision)
+            : selectedDivision?.events.find((e) => e.name === event);
 
         return (
             <div className="page-container">
@@ -179,7 +241,7 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
                 
                 { this._renderDivisionSelection() }
                 { this._renderEventSelection(division) }
-                { this._renderLeaderboard(selectedEvent) }
+                { this._renderLeaderboard(selectedEvent as IEventData) }
                 
             </div>
         );
