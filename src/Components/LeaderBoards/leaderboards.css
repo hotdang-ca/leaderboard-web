@@ -4,6 +4,19 @@
     display: block;
 }
 
+.event-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.event-button {
+    font-size: 0.8rem;
+    margin: 0 8px;
+}
+
 .leaderboard {
     width: 90vw;
 }

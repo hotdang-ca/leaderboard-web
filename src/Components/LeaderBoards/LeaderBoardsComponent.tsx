@@ -115,14 +115,20 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
                 .find((d) => d.name === division)
                 ?.events.map((event) => {
                     return (
-                        <option key={event.name} value={event.name}>{event.name}</option>
+                        <button
+                            onClick={(e: any) => this.setState({ event: event.name })}
+                            className='event-button'
+                            key={event.name}
+                        >
+                            {event.name}
+                        </button>
                     );
             });
 
             return (
-                <select value={this.state.event} onChange={(e: any) => this.setState({ event: e.target.value })}>
+                <div className="event-button-container">
                     { optionJsx }
-                </select>
+                </div>
             );
         }
     }
