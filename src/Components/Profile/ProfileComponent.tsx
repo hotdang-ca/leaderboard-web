@@ -105,6 +105,15 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
     private _handleSelectedDivisionChanged = (e: any) => {
         // TODO: fetch events for this division
         const { target: { value } } = e;
+        if (value === '') {
+            this.setState({
+                events: [],
+                selectedDivision: '',
+            });
+
+            return;
+        }
+
         DivisionsController.getEventsForDivision(value).then((events) => {
             this.setState({
                 selectedDivision: value,
@@ -280,7 +289,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                             value={this.state.selectedEvent || ''}
                             onChange={this._handleSelectedEventChanged}
                         >
-                            <option value="">-- select division --</option>
+                            <option value="">-- select event --</option>
                             {
                                 this.state.events.length &&
                                 this.state.events.map((e) => {
