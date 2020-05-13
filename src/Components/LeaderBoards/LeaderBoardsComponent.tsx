@@ -10,7 +10,7 @@ export interface IScoreData {
     place: number;
     firstName: string;
     lastInitial: string;
-    gender: 'M' | 'F';
+    gender: 'M' | 'F' | 'W';
     teamName: string;
     gymName?: string;
     score: number;
@@ -137,7 +137,7 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
             .sort((a, b) => a.place - b.place);
 
         const women = selectedEvent?.scores
-            .filter((s) => s.gender === 'F')
+            .filter((s) => s.gender === 'W' || s.gender === 'F')
             .sort((a, b) => a.place - b.place);;
 
         return (
