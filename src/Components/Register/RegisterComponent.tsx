@@ -42,7 +42,7 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
             (!email || email.length < 6)
         ) {
             this.setState({
-                errorMessage: 'You need to fill out a firstname, lastname, password and email at minimum.'
+                errorMessage: 'You need to fill out a first name, last name, password and email at minimum.'
             })
             return;
         }
@@ -92,7 +92,7 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
                 <form>
                     <input type="text" placeholder="First Name" onChange={(e) => this.setState({ firstName: e.target.value })} />
                     <br/><input type="text" placeholder="Last Name" onChange={(e) => this.setState({ lastName: e.target.value })} />
-                    <br/><input type="text" placeholder="Email Address" onChange={(e) => this.setState({ email: e.target.value })} />
+                    <br/><input type="email" placeholder="Email Address" onChange={(e) => this.setState({ email: e.target.value })} />
                     <br/><input type="password" placeholder="Password" onChange={(e) => this.setState({ password: e.target.value })} />
                     <br/><input type="text" placeholder="Team Name" onChange={(e) => this.setState({ teamName: e.target.value })} />
                     <br/><input type="text" placeholder="Gym Name" onChange={(e) => this.setState({ gymName: e.target.value })} />

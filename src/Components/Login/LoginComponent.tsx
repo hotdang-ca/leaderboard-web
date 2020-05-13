@@ -45,7 +45,7 @@ class LoginComponentClass extends React.Component<any, ILoginComponentState> {
                 <h1>Login</h1>
                 
                 <form>
-                    <br/><input type="text" placeholder="Email Address" onChange={(e) => this.setState({ email: e.target.value })} />
+                    <br/><input type="email" placeholder="Email Address" onChange={(e) => this.setState({ email: e.target.value })} />
                     <br/><input type="password" placeholder="Password" onChange={(e) => this.setState({ password: e.target.value })} />
                     <br/>
                     <button onClick={this._handleLoginSubmit}>
