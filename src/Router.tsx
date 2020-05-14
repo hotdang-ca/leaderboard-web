@@ -7,6 +7,8 @@ import { LoginComponent } from './Components/Login/LoginComponent';
 import { ProfileComponent } from './Components/Profile/ProfileComponent';
 import { AdminComponent } from './Components/Admin/AdminComponent';
 
+import { Footer } from './Components/widgets/Footer';
+
 export class MainRouter extends React.Component {
     public render() {
         return (
@@ -36,6 +38,7 @@ export class MainRouter extends React.Component {
                         <HomeComponent />
                     </Route>
                 </Switch>
+                <Footer />
             </Router>
         );
     }

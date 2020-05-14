@@ -1,0 +1,12 @@
+.home {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media screen and (max-width: 414px) {
+    .home {
+        min-height: 20vh !important;
+    }
+}
