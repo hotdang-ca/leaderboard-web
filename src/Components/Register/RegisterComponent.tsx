@@ -90,7 +90,7 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
                     </div>
                 }
 
-                <form>
+                <form className="login-form">
                     <input type="text" placeholder="First Name" onChange={(e) => this.setState({ firstName: e.target.value })} />
                     <br/><input type="text" placeholder="Last Name" onChange={(e) => this.setState({ lastName: e.target.value })} />
                     <br/><input type="email" placeholder="Email Address" onChange={(e) => this.setState({ email: e.target.value })} />
@@ -98,7 +98,7 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
                     <br/><input type="text" placeholder="Team Name" onChange={(e) => this.setState({ teamName: e.target.value })} />
                     <br/><input type="text" placeholder="Gym Name" onChange={(e) => this.setState({ gymName: e.target.value })} />
                     <br/>
-                    <button onClick={this._handleRegisterSubmit}>
+                    <button type="submit" className="login-button" onClick={this._handleRegisterSubmit}>
                         Register
                     </button>
                 </form>

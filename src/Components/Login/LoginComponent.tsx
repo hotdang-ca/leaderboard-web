@@ -3,6 +3,7 @@ import { TopLogo } from '../widgets/TopLogo';
 import { MenuBar } from '../widgets/MenuBar';
 import { UsersController } from '../../Utils/ApiController';
 import { withRouter } from 'react-router-dom';
+import './login.css';
 
 interface ILoginComponentState {
     email?: string,
@@ -49,11 +50,11 @@ class LoginComponentClass extends React.Component<any, ILoginComponentState> {
                 <MenuBar />
                 <h1>Login</h1>
                 
-                <form>
+                <form className="login-form">
                     <br/><input type="email" placeholder="Email Address" onChange={(e) => this.setState({ email: e.target.value })} />
                     <br/><input type="password" placeholder="Password" onChange={(e) => this.setState({ password: e.target.value })} />
                     <br/>
-                    <button onClick={this._handleLoginSubmit}>
+                    <button type="submit" className="login-button" onClick={this._handleLoginSubmit}>
                         Log In
                     </button>
                 </form>
