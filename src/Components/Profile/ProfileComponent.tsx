@@ -56,7 +56,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
     }
 
     public componentDidMount() {
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem('com.reginavillains.leaderboards.userId');
         if (!userId) {
             window.location.href="/";
             return;
@@ -65,7 +65,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
     }
 
     private _fetchData = async () => {
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem('com.reginavillains.leaderboards.userId');
         this.setState({
             isLoading: true,
         });
@@ -138,7 +138,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
         });
         
         const { firstName, lastName, gender, teamName, gymName } = this.state;
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem('com.reginavillains.leaderboards.userId');
 
         UsersController.updateProfile(userId, {
             firstName,
@@ -163,7 +163,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
             errorMessage: undefined,
         });
 
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem('com.reginavillains.leaderboards.userId');
         ScoresController.submitScore(
             score, 
             userId,

@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export const MenuBar = (): JSX.Element => {
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('com.reginavillains.leaderboards.userId');
     
     const logout = () => {
-        localStorage.removeItem('userId');
+        localStorage.removeItem('com.reginavillains.leaderboards.userId');
+        localStorage.removeItem('com.reginavillains.leaderboards.admin');
+
         window.location.href = '/';
     }
 

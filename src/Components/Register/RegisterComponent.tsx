@@ -59,9 +59,10 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
         UsersController.register(userObject).then((result: any) => {
             if (result.success) {
                 const { user } = result;
-                localStorage.setItem('userId', user.id);
+                localStorage.setItem('com.reginavillains.leaderboards.userId', user.id);
+
                 const { history } = this.props;
-                history.push('/leaderboards');
+                history.push('/profile');
             }
 
             this.setState({
