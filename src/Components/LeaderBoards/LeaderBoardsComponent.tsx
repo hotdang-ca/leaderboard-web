@@ -74,8 +74,9 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
         }
         
         leaderboardItems
-            .sort((a, b) => a.score - b.score)
+            .sort((a, b) => b.score - a.score)
             .forEach((i, idx) => i.place = (idx + 1));
+        // TODO: why are we re-defining the place? 
 
         return leaderboardItems
             .map((l) => <LeaderBoardItem key={l.scoreId} score={l} />)
