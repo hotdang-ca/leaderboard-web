@@ -16,6 +16,7 @@ interface IProfileComponentState {
     teamName: string;
     gymName: string;
     email: string;
+    currentUserObject?: any;
 
     selectedDivision?: string;
     selectedEvent?: string;
@@ -87,6 +88,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
 
             setTimeout(() => {
                 this.setState({
+                    currentUserObject: user,
                     firstName,
                     lastName,
                     email,
@@ -151,6 +153,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                 statusMessage: 'Updated your profile successfully!',
             }, () => {
                 ScrollToSlowly(0);
+                this._fetchData();
             });
         });
     }
@@ -229,6 +232,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
                     id="gender"
                     value={this.state.gender || ''}
                 >
+                    <option value="">-- select a gender class --</option>
                     <option value="M">Men's</option>
                     <option value="W">Women's</option>
                 </select>
@@ -257,6 +261,17 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
     }
 
     private _renderScoreSubmissionForm = () => {
+        const { currentUserObject } = this.state;
+        if (!currentUserObject || !currentUserObject.gender) {
+            return (
+                <div>
+                    <em>
+                        You must select a gender class before you can submit scores.
+                    </em>
+                </div>
+            );
+        };
+
         return (
             <div>
                 <h2>Submit Score</h2>
