@@ -16,6 +16,23 @@ const getHeaders = () => {
 };
 
 export const UsersController = {
+    getUsers: () => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Users}/`;
+        const options = {
+            method: 'get',
+            headers: getHeaders(),
+        };
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+        .then((parsedApiResult) => {
+            if (parsedApiResult.users) {
+                return parsedApiResult.users;
+            }
+            return parsedApiResult;
+        }).catch((err) => {
+            throw new Error(err);
+        });
+    },
+
     register: (userObject) => {
         const URL = `${API_ROOT}/${ENDPOINTS.Users}/register`;
 
@@ -129,6 +146,24 @@ export const DivisionsController = {
 }
 
 export const ScoresController = {
+    getAllScores: () => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Scores}`;
+        const options = {
+            method: 'get',
+            headers: getHeaders(),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+        .then((parsedApiResult) => {
+            if (!parsedApiResult.scores && parsedApiResult.error) {
+                return { error: parsedApiResult.error };
+            }
+
+            return parsedApiResult.scores;
+        }).catch((err) => {
+            throw new Error(err);
+        });
+    },
     submitScore: (score, userId, eventId) => {
         const URL = `${API_ROOT}/${ENDPOINTS.Scores}`;
 
