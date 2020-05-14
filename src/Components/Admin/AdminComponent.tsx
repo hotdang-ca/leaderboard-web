@@ -3,11 +3,13 @@ import { TopLogo } from '../widgets/TopLogo';
 import { MenuBar } from '../widgets/MenuBar';
 import { IndeterminateLoader } from '../widgets/IndeterminateLoader';
 import { UsersController, DivisionsController, EventsController, ScoresController } from '../../Utils/ApiController';
+import Table from 'rc-table';
 
 import './admin.css';
 
 interface IAdminComponentState {
     isLoading: boolean;
+    currentList: 'events' | 'users' | 'divisions' | 'scores';
 
     users: any[];
     events: any[];
@@ -20,6 +22,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
         super(props, state);
 
         this.state = {
+            currentList: 'scores',
             users: [],
             events: [],
             divisions: [],
@@ -65,227 +68,349 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
         }
     }
 
-    private _renderLists = () => {
-        const { users, divisions, events, scores } = this.state;
-    
-        const usersJsx = users.length === 0 ? <em>No users</em> : users.map((u: any) => {
-            return (
-                <tr key={u.id}>
-                    <td>
-                        { u.firstName }
-                    </td>
-                    <td>
-                        { u.lastName }
-                    </td>
-                    <td>
-                        { u.teamName || 'no team' }
-                    </td>
-                    <td>
-                        { u.gymName || 'no gym' }
-                    </td>
-                    <td>
-                        { u.email }
-                    </td>
-                    <td>
-                        <small>
-                            <button className="small">
-                                Delete
-                            </button>
-                        </small>
-                    </td>
-                </tr>
-            )
-        });
+    private _handleDeleteScore = (scoreId: string): void => {
+        if (window.confirm(`Delete score ${scoreId} ?`)) {
+            ScoresController.deleteScore(scoreId).then(() => {
+                this._fetchData();
+            });
+        }
+    }
 
-        const divisionJsx = divisions.length === 0 ? <em>No divisions</em> : divisions.map((d: any) => {
-            const eventsForDivision = events.filter((e) => e.division.toString() === d.id.toString());
-            const scoresInDivision = scores.filter((s) => eventsForDivision.find((e) => e.id.toString() === s.event.toString()));
+    private _renderScoresTable = () => {
+        const { scores, users, events, divisions } = this.state;
 
-            return (
-                <tr key={d.id}>
-                    <td>
-                        { d.name }
-                    </td>
-                    <td>
-                        { eventsForDivision.length}
-                    </td>
-                    <td>
-                        { scoresInDivision.length }
-                    </td>
-                    <td>
-                        <small>
-                            <button className="small">
-                                Delete
-                            </button>
-                        </small>
-                    </td>
-                </tr>
-            )
-        });
-        
-        const eventsJsx = events.length === 0 ? <em>No events</em> : events.map((e: any) => {
+        const columns = [
+            {
+                title: 'Score',
+                dataIndex: 'score',
+                key: 'score',
+            },
+            {
+                title: 'Place',
+                dataIndex: 'place',
+                key: 'place',
+            },
+            {
+                title: 'Event',
+                dataIndex: 'event',
+                key: 'event',
+            },
+            {
+                title: 'Division',
+                dataIndex: 'division',
+                key: 'division',
+            },
+            {
+                title: 'Athlete',
+                dataIndex: 'athlete',
+                key: 'athlete',
+            },
+            {
+                title: 'Affiliation',
+                dataIndex: 'affiliation',
+                key: 'affiliation',
+            },
+            {
+              title: 'Operations',
+              dataIndex: '',
+              key: 'operations',
+              render: (s: any) => (
+                <>
+                    <button
+                        className="small"
+                        disabled={false}
+                        onClick={() => this._handleDeleteScore(s.key)}
+                    >
+                        Delete
+                    </button>
+                </>
+              ),
+            },
+        ];
 
-            return (
-                <tr key={e.id}>
-                    <td>
-                        { e.name }
-                    </td>
-                    <td>
-                        { divisions.find((d) => d.id.toString() === e.division.toString()).name }
-                    </td>
-                    <td>
-                        { scores.filter((s) => s.event.toString() === e.id.toString()).length }
-                    </td>
-                    <td>
-                        <small>
-                            <button className="small">
-                                Delete
-                            </button>
-                        </small>
-                    </td>
-                </tr>    
-            )
-        });
-        
-        const scoresJsx = scores.length === 0 ? <em>No scores</em> : scores.map((s: any) => {
+        const data = scores.map((s) => {
             const scoreUser = users.find((u) => u.id.toString() === s.user.toString());
             const scoreEvent = events.find((e) => e.id.toString() === s.event.toString());
             const scoreDivision = divisions.find((d) => d.id.toString() === scoreEvent.division.toString());
+    
+            return {
+                score: s.score,
+                place: s.place,
+                event: scoreEvent.name,
+                division: scoreDivision.name,
+                athlete: `${scoreUser.firstName} ${scoreUser.lastName}`,
+                affiliation: `${scoreUser.teamName || 'no team' } / ${scoreUser.gymName || 'no gym' }`,
+                key: s.id,
+            }
+        });
 
-            return (
-                <tr key={s.id}>
-                    <td>
-                        { s.score }
-                    </td>
-                    <td>
-                        { s.place }
-                    </td>
-                    <td>
-                        { scoreEvent.name }
-                    </td>
-                    <td>
-                        { scoreDivision.name }
-                    </td>
-                    <td>
-                        { scoreUser.firstName } { scoreUser.lastName }
-                    </td>
-                    <td>
-                        { scoreUser.teamName || 'no team' } { scoreUser.gymName || 'no gym' }
-                    </td>
-                    <td>
-                        <small>
-                            <button className="small">
-                                Delete
-                            </button>
-                        </small>
-                    </td>
-                </tr>
-                
-                // <li
-                //     key={u.id}
-                // >
-                //     { users.find((user) => user.id.toString() === u.user.toString()).firstName } {users.find((user) => user.id.toString() === u.user.toString()).lastName } <br/>{u.score } (Place: {u.place})<br/>{ events.find((e) => e.id.toString() === u.event.toString()).name }
-                // </li>
-            )
+        return (
+            <Table
+                columns={columns}
+                data={data}
+                tableLayout="auto"
+            />
+        );
+    }
+
+    private _renderUsersTable = () => {
+        const { users } = this.state;
+
+        const columns = [
+            {
+              title: 'First Name',
+              dataIndex: 'firstName',
+              key: 'firstName',
+            },
+            {
+                title: 'Last Name',
+                dataIndex: 'lastName',
+                key: 'lastName',
+            },
+            {
+              title: 'Team',
+              dataIndex: 'teamName',
+              key: 'teamName',
+            },
+            {
+                title: 'Gym',
+                dataIndex: 'gymName',
+                key: 'gymName',
+                width: 200,
+            },
+            {
+                title: 'Number of Scores',
+                dataIndex: 'numScores',
+                key: 'numScores',
+            },
+            {
+                title: 'Email',
+                dataIndex: 'email',
+                key: 'email',
+                width: 100,
+                render: (v: any) => (
+                    <a href={`mailto:${v}`}>{v}</a>
+                )
+            },
+            {
+              title: 'Operations',
+              dataIndex: '',
+              key: 'operations',
+              render: () => (
+                <>
+                    <button
+                        className="small"
+                        disabled={true}
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        className="small"
+                        disabled={true}
+                    >
+                        Delete
+                    </button>
+                </>
+              ),
+            },
+        ];
+
+        const data = users.map((u) => {
+            const { scores } = this.state;
+            const userScores = scores.filter((s) => s.user.toString() === u.id.toString());
+
+            return {
+                firstName: u.firstName,
+                lastName: u.lastName,
+                email: u.email,
+                teamName: u.teamName,
+                gymName: u.gymName,
+                numScores: userScores.length,
+                key: u.id,
+            }
+        });
+
+        return (
+            <Table
+                columns={columns}
+                data={data}
+                tableLayout="auto"
+            />
+        );
+    }
+
+    private _renderEventsTable = () => {
+        const { divisions, scores, events } = this.state;
+
+        const columns = [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
+            },
+            {
+                title: 'Division',
+                dataIndex: 'division',
+                key: 'division',
+            },
+            {
+                title: 'Scores Submitted',
+                dataIndex: 'numScores',
+                key: 'numScores',
+            },
+            {
+                title: 'Operations',
+                dataIndex: '',
+                key: 'operations',
+                render: (v: any) => (
+                  <>
+                    <button
+                          className="small"
+                          disabled={true}
+                      >
+                          Rename
+                      </button>
+                      <button
+                          className="small"
+                          disabled={true}
+                      >
+                          Delete
+                      </button>
+                  </>
+                ),
+              },
+        ];
+
+        const data = events.map((e: any) => {
+            return {
+                name: e.name,
+                division: divisions.find((d) => d.id.toString() === e.division.toString()).name,
+                numScores: scores.filter((s) => s.event.toString() === e.id.toString()).length,
+                key: e.id,
+            }
         });
         
         return (
-            <div className="admin-lists-container">
-                <div>
-                    <h2>Users</h2>
-                    <div>
-                        <table cellPadding={0} cellSpacing={0}>
-                        <thead>
-                            <tr>
-                                <td>First Name</td>
-                                <td>Last Name</td>
-                                <td>Team Name</td>
-                                <td>Gym Name</td>
-                                <td>Email</td>
-                                <td className="tools"></td>
-                            </tr>
-                        </thead>
-                        { usersJsx}
-                        </table>
+            <Table
+                columns={columns}
+                data={data}
+                tableLayout="auto"
+            />
+        );
+    }
+
+    private _renderDivisionsTable = () => {
+        const { divisions, scores, events } = this.state;
+
+        const columns = [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
+            },
+            {
+                title: 'Number of Events',
+                dataIndex: 'numEvents',
+                key: 'numEvents',
+            },
+            {
+                title: 'Number of Scores',
+                dataIndex: 'numScores',
+                key: 'numScores',
+            },
+            {
+                title: 'Operations',
+                dataIndex: '',
+                key: 'operations',
+                render: (v: any) => (
+                  <>
+                      <button
+                          className="small"
+                          disabled={true}
+                      >
+                          Rename
+                      </button>
+                      <button
+                          className="small"
+                          disabled={true}
+                      >
+                          Delete
+                      </button>
+                  </>
+                ),
+              },
+        ];
+
+        const data = divisions.map((d: any) => {
+            const eventsForDivision = events.filter((e) => e.division.toString() === d.id.toString());
+            const scoresInDivision = scores.filter((s) => eventsForDivision.find((e) => e.id.toString() === s.event.toString()));
+
+            return {
+                name: d.name,
+                numEvents: eventsForDivision.length,
+                numScores: scoresInDivision.length,
+                key: d.id,
+            }
+        });
+        
+        return (
+            <Table
+                columns={columns}
+                data={data}
+                tableLayout="auto"
+            />
+        );
+    }
+
+    private _renderLists = () => {        
+        return (
+            <>
+                <div className="admin-lists-menu">
+                    <button
+                        className="tab-link medium"
+                        onClick={(e) => { e.preventDefault(); this.setState({ currentList: 'scores'}); } }
+                    >
+                        Scores
+                    </button>
+                                        
+                    <button
+                        className="tab-link medium"
+                        onClick={() => this.setState({ currentList: 'users'})}
+                    >  
+                        Users
+                    </button>
+                    <button
+                        className="tab-link medium"
+                        onClick={() => this.setState({ currentList: 'divisions'})}
+                    >
+                        Divisions
+                    </button>
+
+                    <button
+                        className="tab-link medium"
+                        onClick={() => this.setState({ currentList: 'events'})}
+                    >
+                        Events
+                    </button>
+                </div>
+                <div className="admin-lists-container">
+                    <div className={`admin-list-panel ${ this.state.currentList === 'users' ? 'visible' : 'hidden'}`}>
+                        { this._renderUsersTable() }
+                    </div>
+                    <div className={`admin-list-panel ${ this.state.currentList === 'divisions' ? 'visible' : 'hidden'}`}>
+                        { this._renderDivisionsTable() }
+                    </div>
+
+                    <div className={`admin-list-panel ${ this.state.currentList === 'events' ? 'visible' : 'hidden'}`}>
+                        { this._renderEventsTable() }
+                    </div>
+                    
+                    <div className={`admin-list-panel ${ this.state.currentList === 'scores' ? 'visible' : 'hidden'}`}>
+                        { this._renderScoresTable() }
                     </div>
                 </div>
-
-                <div>
-                    <div>
-                        <h2>Divisions</h2>
-                        <table cellPadding={0} cellSpacing={0}>
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Number of Events</td>
-                                    <td>Number of Score Submissions</td>
-                                    <td className="tools"></td>
-                                </tr>
-                            </thead>
-                            { divisionJsx }
-                        </table>
-                    </div>
-                </div>
-
-                <div>
-                    <div>
-                        <h2>Events</h2>
-                        <table cellPadding={0} cellSpacing={0}>
-                            <thead>
-                                <tr>
-                                    <td>
-                                        Name
-                                    </td>
-                                    <td>
-                                        Division
-                                    </td>
-                                    <td>
-                                        Number of Scores
-                                    </td>
-                                    <td className="tools">
-
-                                    </td>
-                                </tr>
-                            </thead>
-                            { eventsJsx }
-                        </table>
-                    </div>
-                </div>
-
-                <div>
-                    <div>
-                        <h2>Scores</h2>
-                        <table cellPadding={0} cellSpacing={0}>
-                            <thead>
-                                <tr>
-                                    <td>
-                                        Score
-                                    </td>
-                                    <td>
-                                        Place
-                                    </td>
-                                    <td>
-                                        Event
-                                    </td>
-                                    <td>
-                                        Division
-                                    </td>
-                                    <td>
-                                        Athlete
-                                    </td>
-                                    <td>
-                                        Affiliation
-                                    </td>
-                                    <td className="tools">
-
-                                    </td>
-                                </tr>
-                            </thead>
-                            { scoresJsx }
-                        </table>
-                    </div>
-                </div>
-            </div>
+            </>
         )
     }
 

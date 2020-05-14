@@ -202,7 +202,25 @@ export const ScoresController = {
             }).catch((err) => {
                 throw new Error(err);
             });
-    }
+    },
+    deleteScore: (scoreId) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Scores}/${scoreId}`;
+        const options = {
+            method: 'delete',
+            headers: getHeaders(),
+        };
+
+        return fetch(URL, options).then((apiResult) => {
+            return { deleted: apiResult === 204 };
+        })
+        .then((result) => {
+            if (result.deleted) {
+                return result;
+            }
+        }).catch((err) => {
+            throw new Error(err);
+        });
+    },
 };
 
 export const EventsController = {
