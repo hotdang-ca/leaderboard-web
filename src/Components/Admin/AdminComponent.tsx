@@ -419,6 +419,9 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
             <div className="page-container">
                 <TopLogo />
                 <MenuBar />
+                <div className="small-warning">
+                    <p>You may try rotating your screen, or even better, use a desktop or tablet.<br/>But, there is a lot of data here and you're screen is too small to take it all in. ;)</p>
+                </div>
                 <h1>
                     Admin
                 </h1>

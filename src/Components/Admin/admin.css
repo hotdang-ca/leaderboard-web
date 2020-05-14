@@ -29,6 +29,13 @@
     display: none;
 }
 
+.small-warning {
+    display: none;
+    padding: 16px;
+    width: 100%;
+    background-color: orange;
+    color: white;
+}
 
 table {
     width: 80vw;
@@ -68,4 +75,10 @@ button.medium {
     margin: 2px;
     border-radius: 0;
     font-size: 0.8rem;
+}
+
+@media screen and (max-width: 569px) {
+    .small-warning {
+        display: block;
+    }
 }
