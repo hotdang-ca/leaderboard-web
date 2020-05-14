@@ -19,11 +19,12 @@ export const LeaderBoardItem: React.FC<ILeaderBoardItemProps> =
             { score.place }
         </div>
         <div className="team-gym-container">
-            <div className="team"> {/* team */}
-                { score.teamName }
+            <div className="team"> {/* name */}
+                {score.firstName} { score.lastInitial }
             </div>
-            <div className="gym"> {/* gym */}
-                { score.gymName }
+            <div className="gym"> {/* team/gym */}
+                { score.teamName && score.teamName }
+                { score.gymName && ` / ${ score.gymName || 'no gym' }`}
             </div>
         </div>
         <div className="score"> {/* gym */}
