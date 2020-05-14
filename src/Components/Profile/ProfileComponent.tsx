@@ -265,6 +265,7 @@ export class ProfileComponent extends React.Component<any, IProfileComponentStat
         if (!currentUserObject || !currentUserObject.gender) {
             return (
                 <div>
+                    <h2>Submit Score</h2>
                     <em>
                         You must select a gender class before you can submit scores.
                     </em>
