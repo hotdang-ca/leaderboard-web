@@ -83,7 +83,6 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
                 <MenuBar />
 
                 <h1>Register</h1>
-
                 { this.state.errorMessage && 
                     <div className="error">
                         { this.state.errorMessage }
