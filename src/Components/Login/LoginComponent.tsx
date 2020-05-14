@@ -27,8 +27,13 @@ class LoginComponentClass extends React.Component<any, ILoginComponentState> {
         UsersController.login(email, password).then((result: any) => {
             if (result) {
                 const { user } = result;
-                localStorage.setItem('userId', user.id);
-                this.props.history.push('/leaderboard');
+                localStorage.setItem('com.reginavillains.leaderboards.userId', user.id);
+
+                if (user.role === 'admin' ) {
+                    localStorage.setItem('com.reginavillains.leaderboards.admin', 'true');
+                }
+
+                this.props.history.push('/profile');
             } else {
                 alert(`Error: ${result.error}`);
             }
