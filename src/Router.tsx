@@ -5,6 +5,7 @@ import { LeaderBoardsComponent } from './Components/LeaderBoards/LeaderBoardsCom
 import { RegisterComponent } from './Components/Register/RegisterComponent';
 import { LoginComponent } from './Components/Login/LoginComponent';
 import { ProfileComponent } from './Components/Profile/ProfileComponent';
+import { AdminComponent } from './Components/Admin/AdminComponent';
 
 export class MainRouter extends React.Component {
     public render() {
@@ -27,6 +28,10 @@ export class MainRouter extends React.Component {
                         <ProfileComponent />
                     </Route>
 
+                    <Route path="/admin">
+                        <AdminComponent />
+                    </Route>
+                    
                     <Route path="/">
                         <HomeComponent />
                     </Route>
