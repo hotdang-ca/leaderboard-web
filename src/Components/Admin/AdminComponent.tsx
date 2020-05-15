@@ -21,6 +21,7 @@ interface IAdminComponentState {
     editingEventDivision?: string;
     editingEventSortType?: 'a-to-b' | 'b-to-a';
     editingEventId?: string;
+    editingEventColumn?: 'rank' | 'name';
 
     updateMessage?: string;
 }
@@ -250,7 +251,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
     }
 
     private _handleEventRankTypeEdited = () => {
-        const { editingEventSortType, editingEventId } = this.state;
+        const { editingEventSortType, editingEventId, editingEventColumn } = this.state;
         if (!editingEventSortType) {
             this.setState({
                 editingEventId: undefined,
@@ -271,6 +272,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
             });
         });
     }
+
     private _handleEventTitleEdited = () => {
         const { editingEventTitle, editingEventId } = this.state;
         if (!editingEventTitle) {
@@ -285,6 +287,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 updateMessage: 'Updated. Refreshing...',
                 editingEventId: undefined,
                 editingEventTitle: undefined,
+                editingEventColumn: undefined,
             }, () => {                
                 setTimeout(() => {
                     // TODO: just replace in list of events
@@ -301,6 +304,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
             events,
             editingEventDivision,
             editingEventSortType,
+            editingEventColumn,
             editingEventTitle,
             editingEventId,
         } = this.state;
@@ -311,7 +315,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 dataIndex: 'name',
                 key: 'name',
                 render: (v: any, o: any) => {
-                    if (editingEventId === o.key) {
+                    if (editingEventId === o.key && editingEventColumn === 'name') {
                         return (
                             <div className="editing">
                                 <input type="text" value={editingEventTitle || v} onChange={(e) => this.setState({ editingEventTitle: e.target.value })} />
@@ -328,7 +332,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                     return (
                         <div className="editing">
                             <span>{v}</span>
-                            <span tabIndex={0} onClick={() => this.setState({ editingEventId: o.key })}>
+                            <span tabIndex={0} onClick={() => this.setState({ editingEventId: o.key, editingEventColumn: 'name' })}>
                                 <img src={editIcon} className="edit-icon" alt="Edit"/>
                             </span>
                         </div>
@@ -340,7 +344,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 dataIndex: 'rankType',
                 key: 'rankType',
                 render: (v: any, o: any) => {
-                    if (editingEventId === o.key) {
+                    if (editingEventId === o.key && editingEventColumn === 'rank') {
                         return (
                             <div className="editing">
                                 <select value={editingEventSortType || v} onChange={(e) => this.setState({ editingEventSortType: e.target.value as | 'a-to-b' | 'b-to-a' })}>
@@ -363,7 +367,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                             <span>
                                 {v === 'a-to-b' ? 'Lowest Score' : 'Highest Score'}
                             </span>
-                            <span tabIndex={0} onClick={() => this.setState({ editingEventId: o.key })}>
+                            <span tabIndex={0} onClick={() => this.setState({ editingEventId: o.key, editingEventColumn: 'rank' })}>
                                 <img src={editIcon} className="edit-icon" alt="Edit"/>
                             </span>
                         </div>
