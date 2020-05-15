@@ -249,6 +249,28 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
         );
     }
 
+    private _handleEventRankTypeEdited = () => {
+        const { editingEventSortType, editingEventId } = this.state;
+        if (!editingEventSortType) {
+            this.setState({
+                editingEventId: undefined,
+            });
+            return;
+        }
+
+        EventsController.update(editingEventId, { rankType: editingEventSortType }).then((result: any) => {
+            this.setState({
+                updateMessage: 'Updated. Refreshing...',
+                editingEventId: undefined,
+                editingEventSortType: undefined,
+            }, () => {                
+                setTimeout(() => {
+                    // TODO: just replace in list of events
+                    this._fetchData();
+                }, 750 );
+            });
+        });
+    }
     private _handleEventTitleEdited = () => {
         const { editingEventTitle, editingEventId } = this.state;
         if (!editingEventTitle) {
@@ -265,6 +287,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 editingEventTitle: undefined,
             }, () => {                
                 setTimeout(() => {
+                    // TODO: just replace in list of events
                     this._fetchData();
                 }, 750 );
             });
@@ -310,13 +333,41 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                             </span>
                         </div>
                     )
-                    
                 }
             },
             {
                 title: 'Rank Type',
                 dataIndex: 'rankType',
                 key: 'rankType',
+                render: (v: any, o: any) => {
+                    if (editingEventId === o.key) {
+                        return (
+                            <div className="editing">
+                                <select value={editingEventSortType || v} onChange={(e) => this.setState({ editingEventSortType: e.target.value as | 'a-to-b' | 'b-to-a' })}>
+                                    <option value="a-to-b">Lowest Score</option>
+                                    <option value="b-to-a">Highest Score</option>
+                                </select>
+                                <button
+                                    onClick={this._handleEventRankTypeEdited} 
+                                    className="small"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        )
+                    }
+
+                    return (
+                        <div className="editing">
+                            <span>
+                                {v === 'a-to-b' ? 'Lowest Score' : 'Highest Score'}
+                            </span>
+                            <span tabIndex={0} onClick={() => this.setState({ editingEventId: o.key })}>
+                                <img src={editIcon} className="edit-icon" alt="Edit"/>
+                            </span>
+                        </div>
+                    )
+                }
             },
             {
                 title: 'Division',
