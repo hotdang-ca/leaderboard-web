@@ -142,7 +142,7 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
                     <button
                         onClick={this._handleAllEventsClicked}
                         className="event-button event-button-all">
-                            <strong>ALL (Cumulative)</strong>
+                            <strong>OVERALL (FINAL RANKINGS)</strong>
                         </button>
                 </div>
             );
