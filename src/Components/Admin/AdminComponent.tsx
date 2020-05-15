@@ -344,6 +344,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                         return (
                             <div className="editing">
                                 <select value={editingEventSortType || v} onChange={(e) => this.setState({ editingEventSortType: e.target.value as | 'a-to-b' | 'b-to-a' })}>
+                                    <option value="">-- select sort type --</option>
                                     <option value="a-to-b">Lowest Score</option>
                                     <option value="b-to-a">Highest Score</option>
                                 </select>
