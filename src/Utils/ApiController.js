@@ -237,8 +237,25 @@ export const EventsController = {
             }).catch((err) => {
                 throw new Error(err);
             });
+    },
+
+    update: (eventId, updates) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Events}/${eventId}`;
+        const options = {
+            method: 'put',
+            headers: getHeaders(),
+            body: JSON.stringify(updates),
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                return parsedApiResult.event || {};
+            }).catch((err) => {
+                throw new Error(err);
+            });
     }
 }
+
 export const LeaderboardsController = {
     getAll: () => {
         const URL = `${API_ROOT}/${ENDPOINTS.Leaderboards}/all`;

@@ -6,6 +6,7 @@ import { UsersController, DivisionsController, EventsController, ScoresControlle
 import Table from 'rc-table';
 
 import './admin.css';
+import editIcon from './edit-icon.png';
 
 interface IAdminComponentState {
     isLoading: boolean;
@@ -15,6 +16,13 @@ interface IAdminComponentState {
     events: any[];
     divisions: any[];
     scores: any[];
+
+    editingEventTitle?: string;
+    editingEventDivision?: string;
+    editingEventSortType?: 'a-to-b' | 'b-to-a';
+    editingEventId?: string;
+
+    updateMessage?: string;
 }
 
 export class AdminComponent extends React.Component<any, IAdminComponentState> {
@@ -54,6 +62,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 divisions,
                 events,
                 scores,
+                updateMessage: undefined,
                 isLoading: false,
             });
         });
@@ -240,14 +249,74 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
         );
     }
 
+    private _handleEventTitleEdited = () => {
+        const { editingEventTitle, editingEventId } = this.state;
+        if (!editingEventTitle) {
+            this.setState({
+                editingEventId: undefined,
+            });
+            return;
+        }
+
+        EventsController.update(editingEventId, { name: editingEventTitle }).then((result: any) => {
+            this.setState({
+                updateMessage: 'Updated. Refreshing...',
+                editingEventId: undefined,
+                editingEventTitle: undefined,
+            }, () => {                
+                setTimeout(() => {
+                    this._fetchData();
+                }, 750 );
+            });
+        });
+    }
+
     private _renderEventsTable = () => {
-        const { divisions, scores, events } = this.state;
+        const {
+            divisions,
+            scores,
+            events,
+            editingEventDivision,
+            editingEventSortType,
+            editingEventTitle,
+            editingEventId,
+        } = this.state;
 
         const columns = [
             {
                 title: 'Name',
                 dataIndex: 'name',
                 key: 'name',
+                render: (v: any, o: any) => {
+                    if (editingEventId === o.key) {
+                        return (
+                            <div className="editing">
+                                <input type="text" value={editingEventTitle || v} onChange={(e) => this.setState({ editingEventTitle: e.target.value })} />
+                                <button
+                                    onClick={this._handleEventTitleEdited} 
+                                    className="small"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        )
+                    }
+
+                    return (
+                        <div className="editing">
+                            <span>{v}</span>
+                            <span tabIndex={0} onClick={() => this.setState({ editingEventId: o.key })}>
+                                <img src={editIcon} className="edit-icon" alt="Edit"/>
+                            </span>
+                        </div>
+                    )
+                    
+                }
+            },
+            {
+                title: 'Rank Type',
+                dataIndex: 'rankType',
+                key: 'rankType',
             },
             {
                 title: 'Division',
@@ -265,12 +334,6 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 key: 'operations',
                 render: (v: any) => (
                   <>
-                    <button
-                          className="small"
-                          disabled={true}
-                      >
-                          Rename
-                      </button>
                       <button
                           className="small"
                           disabled={true}
@@ -287,6 +350,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 name: e.name,
                 division: divisions.find((d) => d.id.toString() === e.division.toString()).name,
                 numScores: scores.filter((s) => s.event.toString() === e.id.toString()).length,
+                rankType: e.rankType,
                 key: e.id,
             }
         });
@@ -425,6 +489,12 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 <h1>
                     Admin
                 </h1>
+                
+                {
+                    this.state.updateMessage && 
+                    <div className="status-message">{this.state.updateMessage }</div>
+                }
+
                 <div>
                     { this.state.isLoading 
                         ? <IndeterminateLoader />
