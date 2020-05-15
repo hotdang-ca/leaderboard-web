@@ -18,10 +18,12 @@ export interface IScoreData {
     scoreId: number;
     eventName?: string;
     divisionName?: string;
+    rankType?: 'a-to-b' | 'b-to-a',
 };
 
 type IEventData = {
     name: string;
+    rankType: string;
     scores: IScoreData[];
 };
 
@@ -74,7 +76,9 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
         }
         
         leaderboardItems
-            .sort((a, b) => b.score - a.score)
+            .sort((a, b) => {
+                return a.rankType === 'a-to-b' ? a.score - b.score : b.score - a.score
+            })
             .forEach((i, idx) => i.place = (idx + 1));
         // TODO: why are we re-defining the place? 
 
@@ -189,9 +193,10 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
     private _calculateCumulative = (selectedDivision?: IDivision): IEventData => {
         const name = 'all';
         const scores = new Array() as IScoreData[];
+        const rankType = 'b-to-a';
 
         const defaultValue = {
-            name, scores,
+            name, scores, rankType,
         };
 
         if (!selectedDivision) {
