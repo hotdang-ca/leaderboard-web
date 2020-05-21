@@ -24,29 +24,50 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
         this.state = {}
     }
 
+    private _canRegister = (): boolean => {
+        const { firstName, lastName, password, email } = this.state;
+        if (!firstName || !lastName || !password || !email) {
+            return false;
+        }
+
+        return (firstName.length > 0 && lastName.length > 0 && email.length > 0 && password.length > 0);
+    }
+
     private _handleRegisterSubmit = (e: any) => {
         e.preventDefault();
+
+        const { firstName, lastName, password, email, teamName, gymName } = this.state;
+
+        if (!this._canRegister()) {
+            const derivedErrorMessage = 'You must fill out ';
+            const reasons = [];
+
+            if (!firstName) {
+                reasons.push('first name');
+            }
+
+            if (!lastName) {
+                reasons.push('last name');
+            }
+
+            if (!email) {
+                reasons.push('email address');
+            }
+
+            if (!password) {
+                reasons.push('password');
+            }
+
+            this.setState({
+                errorMessage: `${derivedErrorMessage} ${reasons.join(',')}`,
+            });
+            return;
+        }
 
         this.setState({
             errorMessage: undefined,
         });
         
-        const { firstName, lastName, password, email, teamName, gymName } = this.state;
-        if (
-            (!firstName || firstName.length < 2)
-            || 
-            (!lastName || lastName.length < 5)
-            ||
-            (!password || password.length < 8)
-            || 
-            (!email || email.length < 6)
-        ) {
-            this.setState({
-                errorMessage: 'You need to fill out a first name, last name, password and email at minimum.'
-            })
-            return;
-        }
-
         const userObject = {
             firstName,
             lastName,
@@ -97,7 +118,12 @@ class RegisterComponentClass extends React.Component<any, IRegisterComponentStat
                     <br/><input type="text" placeholder="Team Name" onChange={(e) => this.setState({ teamName: e.target.value })} />
                     <br/><input type="text" placeholder="Gym Name" onChange={(e) => this.setState({ gymName: e.target.value })} />
                     <br/>
-                    <button type="submit" className="login-button" onClick={this._handleRegisterSubmit}>
+                    <button
+                        type="submit"
+                        className="login-button"
+                        onClick={this._handleRegisterSubmit}
+                        disabled={!this._canRegister()}
+                    >
                         Register
                     </button>
                 </form>
