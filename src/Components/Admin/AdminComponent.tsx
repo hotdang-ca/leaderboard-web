@@ -178,6 +178,11 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 key: 'lastName',
             },
             {
+                title: 'Gender Class',
+                dataIndex: 'genderClass',
+                key: 'genderClass',
+            },
+            {
               title: 'Team',
               dataIndex: 'teamName',
               key: 'teamName',
@@ -229,11 +234,22 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
         const data = users.map((u) => {
             const { scores } = this.state;
             const userScores = scores.filter((s) => s.user.toString() === u.id.toString());
+            const genderToString = (gender: string): string | JSX.Element => {
+                switch (gender) {
+                    case 'M':
+                        return 'Men\'s';
+                    case 'W':
+                        return 'Women\'s';
+                    default:
+                        return <em>Not set</em>;
+                }
+            }
 
             return {
                 firstName: u.firstName,
                 lastName: u.lastName,
                 email: u.email,
+                genderClass: genderToString(u.gender),
                 teamName: u.teamName,
                 gymName: u.gymName,
                 numScores: userScores.length,
