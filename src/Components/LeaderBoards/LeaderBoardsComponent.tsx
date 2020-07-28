@@ -56,14 +56,16 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
 
     private _fetchData(): void {
         LeaderboardsController.getAll().then((leaderboardPayload: ILeaderboardPayload) => {
-            const firstDivision = leaderboardPayload.divisions[0];
-            const firstEvent = firstDivision.events[0];
-
-            this.setState({
-                division: firstDivision.name,
-                event: firstEvent.name,
-                leaderboardPayload,
-            });
+            if (leaderboardPayload.divisions.length) {
+                const firstDivision = leaderboardPayload.divisions[0];
+                const firstEvent = firstDivision.events[0];
+    
+                this.setState({
+                    division: firstDivision.name,
+                    event: firstEvent.name,
+                    leaderboardPayload,
+                });
+            }
         })
         .catch((err) => {
             console.log('There was an error', err);
@@ -98,10 +100,12 @@ export class LeaderBoardsComponent extends React.Component<any, ILeaderBoardsCom
         
         const divisionChanged = (e: any) => {
             const selectedDivision = leaderboardPayload?.divisions.find((d) => d.name === e.target.value);
-            this.setState({
-                division: selectedDivision?.name,
-                event: selectedDivision?.events[0].name,
-            });
+            if (selectedDivision && selectedDivision.events.length) {
+                this.setState({
+                    division: selectedDivision?.name,
+                    event: selectedDivision?.events[0].name,
+                });
+            }
         };
         
         return (

@@ -26,6 +26,11 @@ interface IAdminComponentState {
     isAddingDivision: boolean;
     newDivisionName: string;
 
+    isAddingEvent: boolean;
+    newEventName: string;
+    newEventRankType: '' | 'a-to-b' | 'b-to-a';
+    newEventDivision: string;
+
     updateMessage?: string;
 }
 
@@ -44,6 +49,11 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
 
             isAddingDivision: false,
             newDivisionName: '',
+
+            isAddingEvent: false,
+            newEventName: '',
+            newEventDivision: '',
+            newEventRankType: '',
         }
     }
 
@@ -91,16 +101,39 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
             });
         }
     }
+    
+    private _handleDeleteDivision = (divisionId: string): void => {
+        if (window.confirm(`Delete division ${divisionId}?`)) {
+            DivisionsController.deleteDivision(divisionId).then(() => {
+                this._fetchData();
+            })
+        }
+    }
 
     private _handleNewDivisionClicked = (): void => {
         this.setState({ isLoading: true });
         DivisionsController.createDivision(this.state.newDivisionName).then((_: any) => {
-            // don't really care... just reload
-            DivisionsController.getDivisions().then((divisions) => {
-                this.setState({
-                    divisions,
-                    isLoading: false,
-                });
+            this.setState({
+                newDivisionName: '',
+            }, () => {
+                this._fetchData();
+            });
+        });
+    }
+
+    private _handleNewEventClicked = (): void => {
+        this.setState({isLoading: true});
+        EventsController.createEvent({
+            name: this.state.newEventName,
+            division: this.state.newEventDivision,
+            rankType: this.state.newEventRankType
+        }).then((_: any) => {
+            this.setState({
+                newEventDivision: '',
+                newEventName: '',
+                newEventRankType: 'a-to-b',
+            }, () => {
+                this._fetchData();
             });
         });
     }
@@ -447,11 +480,54 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
         });
         
         return (
-            <Table
-                columns={columns}
-                data={data}
-                tableLayout="auto"
-            />
+            <>
+                <button 
+                    className="small"
+                    onClick={() => this.setState({ isAddingEvent: !this.state.isAddingEvent })}
+                >
+                    Add Event
+                </button>
+                {
+                    this.state.isAddingEvent &&
+                    <div>
+                        <input type="text" placeholder="Event Name" onChange={(e) => this.setState({ newEventName: e.target.value }) }/>
+                        <select
+                            onChange={(e) => this.setState({ newEventDivision: e.target.value })}
+                        >
+                            <option value=""> -- select a division -- </option>
+                            {
+                                this.state.divisions.map((division) => {
+                                    return (
+                                        <option
+                                            key={division.id} 
+                                            value={division.id}
+                                        >
+                                            {division.name}
+                                        </option>
+                                    )
+                                })
+                            }
+                        </select>
+                        <select
+                            onChange={(e) => this.setState({ newEventRankType: e.target.value === '' ? '' : e.target.value === 'a-to-b' ? 'a-to-b' : 'b-to-a' })}
+                        >
+                            <option value="a-to-b">Lowest-to-Highest</option>
+                            <option value="b-to-a">Highest-To-Lowest</option>
+                        </select>
+                        <button
+                            className="medium"
+                            onClick={this._handleNewEventClicked}
+                        >
+                            Add Event
+                        </button>
+                    </div>
+                }
+                <Table
+                    columns={columns}
+                    data={data}
+                    tableLayout="auto"
+                />
+            </>
         );
     }
 
@@ -478,7 +554,7 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 title: 'Operations',
                 dataIndex: '',
                 key: 'operations',
-                render: (v: any) => (
+                render: (d: any) => (
                   <>
                       <button
                           className="small"
@@ -488,7 +564,8 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                       </button>
                       <button
                           className="small"
-                          disabled={true}
+                          disabled={false}
+                          onClick={() => this._handleDeleteDivision(d.key)}
                       >
                           Delete
                       </button>

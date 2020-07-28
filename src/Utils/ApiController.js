@@ -125,6 +125,24 @@ export const DivisionsController = {
             });
     },
 
+    deleteDivision: (divisionId) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Divisions}/${divisionId}`;
+        const options = {
+            method: 'delete',
+            headers: getHeaders(),
+        }
+
+        return fetch(URL, options)
+            .then((_) => {
+                return true;
+            }).then((_) => {
+                return true;
+            }).catch((err) => {
+                console.log('Division Delete error: ', err);
+                throw new Error(err.message);
+            });
+    },
+
     getDivisions: () => {
         const URL = `${API_ROOT}/${ENDPOINTS.Divisions}`;
         const options = {
@@ -259,6 +277,22 @@ export const EventsController = {
         return fetch(URL, options).then((apiResult) => apiResult.json())
             .then((parsedApiResult) => {
                 return parsedApiResult.events || [];
+            }).catch((err) => {
+                throw new Error(err);
+            });
+    },
+
+    createEvent: (newEventData) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Events}`;
+        const options = {
+            method: 'post',
+            headers: getHeaders(),
+            body: JSON.stringify(newEventData)
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                return parsedApiResult.event;
             }).catch((err) => {
                 throw new Error(err);
             });
