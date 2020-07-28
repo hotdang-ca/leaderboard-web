@@ -100,6 +100,31 @@ export const UsersController = {
 };
 
 export const DivisionsController = {
+    createDivision: (newDivision) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Divisions}`;
+        const options = {
+            method: 'post',
+            headers: getHeaders(),
+            body: JSON.stringify({
+                name: newDivision,
+            })
+        };
+
+        return fetch(URL, options).then((apiResult) => apiResult.json())
+            .then((parsedApiResult) => {
+                if (parsedApiResult.error) {
+                    throw new Error(parsedApiResult.error);
+                }
+
+                if (parsedApiResult && parsedApiResult.division) {
+                    return parsedApiResult.division;
+                }
+            }).catch((err) => {
+                console.log('error', err);
+                throw new Error(err.message);
+            });
+    },
+
     getDivisions: () => {
         const URL = `${API_ROOT}/${ENDPOINTS.Divisions}`;
         const options = {

@@ -23,6 +23,9 @@ interface IAdminComponentState {
     editingEventId?: string;
     editingEventColumn?: 'rank' | 'name';
 
+    isAddingDivision: boolean;
+    newDivisionName: string;
+
     updateMessage?: string;
 }
 
@@ -38,6 +41,9 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
             scores: [],
 
             isLoading: false,
+
+            isAddingDivision: false,
+            newDivisionName: '',
         }
     }
 
@@ -84,6 +90,19 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 this._fetchData();
             });
         }
+    }
+
+    private _handleNewDivisionClicked = (): void => {
+        this.setState({ isLoading: true });
+        DivisionsController.createDivision(this.state.newDivisionName).then((_: any) => {
+            // don't really care... just reload
+            DivisionsController.getDivisions().then((divisions) => {
+                this.setState({
+                    divisions,
+                    isLoading: false,
+                });
+            });
+        });
     }
 
     private _renderScoresTable = () => {
@@ -491,11 +510,43 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
         });
         
         return (
+            <>
+            <button
+                className="small"
+                onClick={() => this.setState({
+                    isAddingDivision: !this.state.isAddingDivision
+                })}
+            >
+                Add Division
+            </button>
+            { 
+                this.state.isAddingDivision && 
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flexStart'}}>
+                    Add division
+                    <label htmlFor="addDivisionName">Name</label>
+                    <input
+                        id="addDivisionName"
+                        type="text"
+                        placeholder="Name"
+                        onChange={(e: any) => this.setState({ newDivisionName: e.target.value })}
+                    />
+                    <button
+                        disabled={!this.state.newDivisionName.length}
+                        className="medium"
+                        onClick={this._handleNewDivisionClicked}
+                    >
+                        Save New Division
+                    </button>
+                </div>
+                
+            }
+
             <Table
                 columns={columns}
                 data={data}
                 tableLayout="auto"
             />
+            </>
         );
     }
 
