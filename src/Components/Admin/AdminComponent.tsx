@@ -110,6 +110,14 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
         }
     }
 
+    private _handleDeleteEvent = (eventId: string): void => {
+        if (window.confirm(`Delete division ${eventId}?`)) {
+            EventsController.deleteEvent(eventId).then(() => {
+                this._fetchData();
+            })
+        }
+    }
+
     private _handleNewDivisionClicked = (): void => {
         this.setState({ isLoading: true });
         DivisionsController.createDivision(this.state.newDivisionName).then((_: any) => {
@@ -456,11 +464,11 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
                 title: 'Operations',
                 dataIndex: '',
                 key: 'operations',
-                render: (v: any) => (
+                render: (e: any) => (
                   <>
                       <button
                           className="small"
-                          disabled={true}
+                          onClick={() => this._handleDeleteEvent(e.key)}
                       >
                           Delete
                       </button>

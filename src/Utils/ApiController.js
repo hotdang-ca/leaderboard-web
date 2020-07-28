@@ -298,6 +298,22 @@ export const EventsController = {
             });
     },
 
+    deleteEvent: (eventId) => {
+        const URL = `${API_ROOT}/${ENDPOINTS.Events}/${eventId}`;
+        const options = {
+            method: 'delete',
+            headers: getHeaders(),
+        };
+        return fetch(URL, options)
+            .then((_) => true)
+            .then((_) => {
+                return true;
+            })
+            .catch((err) => {
+                throw new Error(err);
+            });
+    },
+    
     update: (eventId, updates) => {
         const URL = `${API_ROOT}/${ENDPOINTS.Events}/${eventId}`;
         const options = {
