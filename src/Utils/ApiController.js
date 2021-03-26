@@ -133,10 +133,15 @@ export const DivisionsController = {
         }
 
         return fetch(URL, options)
-            .then((_) => {
-                return true;
-            }).then((_) => {
-                return true;
+            .then((rawResponse) => {
+                if (rawResponse.status == 204) {
+                    return { status: 204, message: 'ok' }
+                } else {
+                    return rawResponse.json();
+                }
+            })
+            .then((response) => {
+                return response;
             }).catch((err) => {
                 console.log('Division Delete error: ', err);
                 throw new Error(err.message);
@@ -305,9 +310,15 @@ export const EventsController = {
             headers: getHeaders(),
         };
         return fetch(URL, options)
-            .then((_) => true)
-            .then((_) => {
-                return true;
+            .then((rawResponse) => {
+                if (rawResponse.status == 204) {
+                    return { status: 204, message: 'ok' }
+                } else {
+                    return rawResponse.json();
+                }
+            })
+            .then((response) => {
+                return response;
             })
             .catch((err) => {
                 throw new Error(err);
