@@ -103,18 +103,36 @@ export class AdminComponent extends React.Component<any, IAdminComponentState> {
     }
     
     private _handleDeleteDivision = (divisionId: string): void => {
-        if (window.confirm(`Delete division ${divisionId}?`)) {
-            DivisionsController.deleteDivision(divisionId).then(() => {
-                this._fetchData();
+        const { divisions } = this.state;
+        const division = divisions.find((d) => d.id === divisionId);
+
+        if (window.confirm(`Delete division ${division.name}?`)) {
+            DivisionsController.deleteDivision(divisionId).then((response) => {
+                if (response.status === 204) {
+                    this._fetchData();
+                    return;
+                }
+
+                window.alert(`Could not delete division: ${response.message}`);
             })
         }
     }
 
     private _handleDeleteEvent = (eventId: string): void => {
-        if (window.confirm(`Delete division ${eventId}?`)) {
-            EventsController.deleteEvent(eventId).then(() => {
-                this._fetchData();
-            })
+        const { events } = this.state;
+        const event = events.find((e) => e.id === eventId);
+
+        if (window.confirm(`Delete event ${event.name}?`)) {
+            EventsController.deleteEvent(event.id).then((response) => {
+                if (response.status === 204) {
+                    this._fetchData();
+                    return;
+                }
+
+                window.alert(`Could not delete event: ${response.message}`);
+            }).catch((err) => {
+                debugger; 
+            });
         }
     }
 
